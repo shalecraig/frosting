@@ -1,0 +1,22 @@
+{
+    "name": "mpoiriert/frosting",
+    "type": "library",
+    "description": "Reusable library",
+    "keywords": ["framework"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Martin Poirier Theoret",
+            "email": "mpoiriert@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3"
+    },
+    "require-dev": {
+         "phpunit/phpunit": "3.7.*"
+    },
+		"autoload": {
+        "psr-0": { "Frosting\\": "src/" }
+		}
+}
