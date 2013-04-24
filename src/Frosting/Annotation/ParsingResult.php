@@ -22,7 +22,7 @@ class ParsingResult implements IParsingResult
   
   private $methodAnnotations = array();
   
-  private $attributeAnnotations = array();
+  private $propertyAnnotations = array();
   
   private $haveAnnotations = false;
   
@@ -60,23 +60,23 @@ class ParsingResult implements IParsingResult
     return $this->filters($this->methodAnnotations[$name], $filters);
   }
   
-  public function getAllAttributeAnnotations(array $filters = array()) 
+  public function getAllPropertyAnnotations(array $filters = array()) 
   {
     $result = array();
-    foreach($this->attributeAnnotations as $attributeName => $annotations) {
-      $result[$attributeName] = $this->filters($annotations, $filters);
+    foreach($this->propertyAnnotations as $propertyName => $annotations) {
+      $result[$propertyName] = $this->filters($annotations, $filters);
     }
     
     return $result;
   }
   
-  public function getAttributeAnnotations($name, array $filters = array())
+  public function getPropertyAnnotations($name, array $filters = array())
   {
-    if(!array_key_exists($name, $this->attributeAnnotations)) {
+    if(!array_key_exists($name, $this->propertyAnnotations)) {
       return array();
     }
     
-    return $this->filters($this->attributeAnnotations[$name], $filters);
+    return $this->filters($this->propertyAnnotations[$name], $filters);
   }
   
   private function filters($annotations,$filters) 
@@ -93,9 +93,15 @@ class ParsingResult implements IParsingResult
     $this->haveAnnotations = $this->haveAnnotations || count($annotations) > 0;
   }
   
-  public function setMethodAnnotation($methodName,$annotations)
+  public function setMethodAnnotations($methodName,$annotations)
   {
     $this->methodAnnotations[$methodName] = $annotations;
+    $this->haveAnnotations = $this->haveAnnotations || count($annotations) > 0;
+  }
+  
+  public function setPropertyAnnotations($propertyName,$annotations)
+  {
+    $this->propertyAnnotations[$propertyName] = $annotations;
     $this->haveAnnotations = $this->haveAnnotations || count($annotations) > 0;
   }
 
@@ -108,7 +114,7 @@ class ParsingResult implements IParsingResult
   {    
     $this->methodAnnotations = array_merge($parentResult->methodAnnotations,$this->methodAnnotations); 
     $this->classAnnotations = array_merge($parentResult->classAnnotations,$this->classAnnotations);
+    $this->propertyAnnotations = array_merge($parentResult->propertyAnnotations,$this->propertyAnnotations);
     $this->haveAnnotations = $this->haveAnnotations || $parentResult->haveAnnotations;
   }
-  
 }

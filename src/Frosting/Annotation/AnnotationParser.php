@@ -42,9 +42,23 @@ class AnnotationParser implements IAnnotationParserService
     
     $result->setClassAnnotations($this->reader->getClassAnnotations($reflectionClass));
     foreach($reflectionClass->getMethods() as $reflectionMethod) {      
-      $result->setMethodAnnotation(
+      $result->setMethodAnnotations(
         $reflectionMethod->getName(),
         $this->reader->getMethodAnnotations($reflectionMethod)
+      );
+    }
+    
+    foreach($reflectionClass->getMethods() as $reflectionMethod) {      
+      $result->setMethodAnnotations(
+        $reflectionMethod->getName(),
+        $this->reader->getMethodAnnotations($reflectionMethod)
+      );
+    }
+    
+    foreach($reflectionClass->getProperties() as $reflectionProperty) {      
+      $result->setPropertyAnnotations(
+        $reflectionProperty->getName(),
+        $this->reader->getPropertyAnnotations($reflectionProperty)
       );
     }
     

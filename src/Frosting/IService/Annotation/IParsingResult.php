@@ -22,7 +22,7 @@ interface IParsingResult
   
   public function getMethodAnnotations($name,array $filters = array());
   
-  public function getAllAttributeAnnotations(array $filters = array());
+  public function getAllPropertyAnnotations(array $filters = array());
   
-  public function getAttributeAnnotations($name,array $filters = array());
+  public function getPropertyAnnotations($name,array $filters = array());
 }

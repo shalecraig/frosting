@@ -19,6 +19,7 @@
          "phpmd/phpmd": "1.4.*"
     },
 		"autoload": {
-        "psr-0": { "Frosting\\": "src/" }
+        "psr-0": { "Frosting\\": "src/" },
+        "files": ["src/Frosting/IService/functions.php"]
 		}
 }
