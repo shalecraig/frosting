@@ -5,4 +5,19 @@
 			<directory>./src/Frosting/*/Tests</directory>
 		</testsuite>
 	</testsuites>
+
+  <filter>
+    <whitelist processUncoveredFilesFromWhitelist="true">
+      <directory suffix=".php">./src</directory>
+      <exclude>
+        <directory>./src/Frosting/IService/*/Tests</directory>
+        <directory>./src/Frosting/*/Tests</directory>
+      </exclude>
+    </whitelist>
+  </filter>
+
+  <logging>
+    <log type="coverage-html" target="./report/phpunit" charset="UTF-8"
+         highlight="false" lowUpperBound="35" highLowerBound="70"/>
+  </logging>
 </phpunit>

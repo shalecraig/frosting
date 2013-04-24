@@ -5,7 +5,7 @@ namespace Frosting\Cache;
 /**
  * Interface for categories
  */
-interface ICacheCategory extends Frosting\IService\Cache\ICacheCategory
+interface ICacheCategory extends \Frosting\IService\Cache\ICacheCategory
 {
   public function getSegregationPrefix();
   

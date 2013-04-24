@@ -76,11 +76,14 @@ abstract class ServiceContainerTest extends \PHPUnit_Framework_TestCase
   
   public function testGetServiceConfiguration()
   {
-    $configuration = $this->loadServiceContainer()->getServiceConfiguration('test');
-    $this->assertEquals('configuration_string', $configuration,'Returned service configuration is not good');
+    $configurationTest = $this->loadServiceContainer()->getServiceConfiguration('test');
+    $this->assertEquals('configuration_string', $configurationTest,'Returned service configuration is not good');
+    
+    $configurationTag = $this->loadServiceContainer()->getServiceConfiguration('tag');
+    $this->assertNull($configurationTag,'Returned service configuration should be null');
     
     try {
-      $this->serviceContainer->getServiceByName('unknow');
+      $this->serviceContainer->getServiceConfiguration('unknow');
       $this->fail('Must throw a exception when requested configuration of a not existing service.');
     } catch (ServiceDoesNotExistsException $e) {
       $this->assertTrue(true);
@@ -100,6 +103,11 @@ abstract class ServiceContainerTest extends \PHPUnit_Framework_TestCase
     $this->assertEquals(2, count($testServices));
     
     $this->assertTrue(in_array($iTestServices[0],$testServices));
+    
+    $this->assertEquals(
+      0,
+      count($this->loadServiceContainer()->getServicesByTag('Unknow'))
+    );
   }
 }
 

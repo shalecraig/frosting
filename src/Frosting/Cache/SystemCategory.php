@@ -70,4 +70,9 @@ class SystemCategory implements ICacheCategory
   {
     return $this->storage;
   }
+  
+  public function getSegregationPrefix() 
+  {
+    return '';
+  }
 }

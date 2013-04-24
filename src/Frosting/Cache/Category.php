@@ -2,34 +2,32 @@
 
 namespace Frosting\Cache;
 
-use \core\event\IDispatcher;
-
-class Category implements ICategory
+class Category implements ICacheCategory
 {
   /**
    * @var string
    */
-  protected $name;
+  private $name;
   
   /**
    * @var IStorage
    */
-  protected $storage;
+  private $storage;
 
   /**
    * @var ICategoryState
    */
-  protected $systemState;
+  private $systemState;
 
   /**
    * @var integer
    */
-  protected $version;
+  private $version;
 
   /**
    * @var integer Timestamp
    */
-  protected $clearDate;
+  private $clearDate;
 
   /**
    *
@@ -70,10 +68,10 @@ class Category implements ICategory
   /**
    * @return ICategory $this
    */
-  public function clear($categoryName)
+  public function clear()
   {
     $this->version++;
-    $this->dispatcher->notify(new \core\event\Event($this,'Cache.' . $categoryName . '.clear'));
+    $this->dispatcher->notify(new \core\event\Event($this,'Cache.' . $this->getName() . '.clear'));
     $this->clearDate = time();
     $this->systemState->updateData($this);
     return $this;
@@ -101,9 +99,9 @@ class Category implements ICategory
    * @param string $format
    * @return string
    */
-  public function getClearDate($format = 'U')
+  public function getVersionCreationTimestamp()
   {
-    return date($format, $this->clearDate);
+    return $this->clearDate;
   }
   
   /**

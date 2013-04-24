@@ -17,10 +17,10 @@ interface ICacheStorage
    * Store the content of the entry
    * 
    * @param string $entryName
-   * @param string $content
+   * @param \Frosting\Cache\EntryContent $content
    * @param ICategory $category
    */
-  public function store($entryName, $content, ICacheCategory $category);
+  public function store($entryName, EntryContent $content, ICacheCategory $category);
   
   /**
    * Return the content of the entry has is or null if not found

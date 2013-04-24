@@ -104,29 +104,6 @@ class ParsingResult implements IParsingResult
     return $this->haveAnnotations;
   }
   
-  public function isAnnotedWith($annotationClass, $annotationFilterCallback = null)
-  {
-    if(is_null($annotationFilterCallback)) {
-      $annotationFilterCallback = function($annotation) { return true ;};
-    }
-    
-    foreach($this->getMethodAnnotations() as $annotations) {
-      foreach($annotations as $annotation) {
-        if($annotation instanceof $annotationClass && $annotationFilterCallback($annotation)) {
-          return true;
-        }
-      }
-    }
-    
-    foreach($this->classAnnotations as $annotation) {
-      if($annotation instanceof $annotationClass && $annotationFilterCallback($annotation)) {
-        return true;
-      }
-    }
-    
-    return false;
-  }
-  
   public function mergeParentClass(ParsingResult $parentResult)
   {    
     $this->methodAnnotations = array_merge($parentResult->methodAnnotations,$this->methodAnnotations); 
