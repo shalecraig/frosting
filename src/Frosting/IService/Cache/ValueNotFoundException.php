@@ -5,4 +5,4 @@ namespace Frosting\IService\Cache;
 /**
  * The value was not found in the cache storage
  */
-class ValueNotFoundException extends \Exception {}
+class ValueNotFoundException extends \RuntimeException {}

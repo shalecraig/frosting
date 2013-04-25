@@ -2,33 +2,38 @@
 
 namespace Frosting\Cache\File;
 
-use \Frosting\Cache\ICacheStorage;
-use \Frosting\Cache\ValueNotFoundException;
-use \Frosting\Cache\ICacheCategory;
-use \Frosting\Cache\EntryContent;
+use Frosting\Cache\ICacheStorage;
+use Frosting\IService\Cache\ValueNotFoundException;
+use Frosting\Cache\ICacheCategory;
+use Frosting\Cache\EntryContent;
 
 use \Woozworld\Cache\StorageConfigurationException;
 
 /**
  * File storage class
  */
-class Storage implements ICacheStorage
+class FileStorage implements ICacheStorage
 {
   /**
    * @var string
    */
-  protected $baseDir;
+  private $baseDir;
   
   
   /**
    * @param array $config
+   * 
+   * @Frosting\IService\DependencyInjection\Inject(configuration="$")
    */
-  public function __construct(array $config)
+  public function initialize($configuration = array())
   {
-    if (!isset($config['base_dir'])) {
-      throw new StorageConfigurationException('No base directory specified');
+    if(is_null($configuration)) {
+      $configuration = array();
     }
-    $this->baseDir = $config['base_dir'];
+    if (!isset($configuration['baseDir'])) {
+      $configuration['baseDir'] = sys_get_temp_dir();
+    }
+    $this->baseDir = $configuration['baseDir'];
   }
   
   /**
@@ -36,11 +41,11 @@ class Storage implements ICacheStorage
    * @param string $entryName
    * @param EntryContent $content
    * @param ICategory $category
-   * @return IStorage $this
+   * @return ICacheStorage $this
    */
   public function store($entryName, EntryContent $content, ICacheCategory $category)
   {
-    $file = $this->prepareBaseDir()->getKey($entryName, $category->getVersion(), $category->getName());
+    $file = $this->prepareBaseDir()->getKey($entryName, $category);
     
     if (!@file_put_contents($file, serialize($content))) {
       throw new IOException(sprintf('Error writing file %s', $file));
@@ -76,13 +81,13 @@ class Storage implements ICacheStorage
    * Remove an entry
    * @param string $entryName
    * @param ICategory $category
-   * @return IStorage $this
+   * @return ICacheStorage $this
    */
   public function remove($entryName, ICacheCategory $category)
   {
     $file = $this->prepareBaseDir()->getKey($entryName, $category);
     
-    if (!@unlink($file)) {
+    if (file_exists($file) && !@unlink($file)) {
       throw new IOException(sprintf('Error removing file %s', $file));
     }
         

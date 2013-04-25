@@ -36,7 +36,10 @@ abstract class ServiceContainerTest extends \PHPUnit_Framework_TestCase
            ),
            'itag' => array (
               'class' => __NAMESPACE__ . '\TaggedViaInterface',
-           )
+           ),
+           'injected' => array (
+              'class' => __NAMESPACE__ . '\TestInjectedService',
+           ),
         )
       );
       $this->assertInstanceOf('\Frosting\IService\DependencyInjection\IServiceContainer', $this->serviceContainer);
@@ -47,21 +50,22 @@ abstract class ServiceContainerTest extends \PHPUnit_Framework_TestCase
   
   public function testGetServiceByName()
   {
-    $serviceTest = $this->loadServiceContainer()->getServiceByName('test');
+    $serviceContainer = $this->loadServiceContainer();
+    $serviceTest = $serviceContainer->getServiceByName('test');
     
     $this->assertInstanceOf(__NAMESPACE__ . '\TestService', $serviceTest);
     
     $this->assertSame($serviceTest, $this->loadServiceContainer()->getServiceByName('test'));
     
     try {
-      $this->loadServiceContainer()->getServiceByName('unknow');
+      $serviceContainer->getServiceByName('unknow');
       $this->fail('Must throw a exception when requested a not existing service.');
     } catch (ServiceDoesNotExistsException $e) {
       $this->assertTrue(true);
     }
     
     try {
-      $this->loadServiceContainer()->getServiceByName('disabled');
+      $serviceContainer->getServiceByName('disabled');
       $this->fail('Must throw a exception when requested a disabled service.');
     } catch (ServiceDisabledException $e) {
       $this->assertTrue(true);
@@ -71,19 +75,20 @@ abstract class ServiceContainerTest extends \PHPUnit_Framework_TestCase
   public function testGetServiceNames()
   {
     $serviceNames = $this->loadServiceContainer()->getServiceNames();
-    $this->assertEquals(array('test','tag','itag'), $serviceNames);
+    $this->assertEquals(array('test','tag','itag','injected'), $serviceNames);
   }
   
   public function testGetServiceConfiguration()
   {
-    $configurationTest = $this->loadServiceContainer()->getServiceConfiguration('test');
+    $serviceContainer = $this->loadServiceContainer();
+    $configurationTest = $serviceContainer->getServiceConfiguration('test');
     $this->assertEquals('configuration_string', $configurationTest,'Returned service configuration is not good');
     
-    $configurationTag = $this->loadServiceContainer()->getServiceConfiguration('tag');
+    $configurationTag = $serviceContainer->getServiceConfiguration('tag');
     $this->assertNull($configurationTag,'Returned service configuration should be null');
     
     try {
-      $this->serviceContainer->getServiceConfiguration('unknow');
+      $serviceContainer->getServiceConfiguration('unknow');
       $this->fail('Must throw a exception when requested configuration of a not existing service.');
     } catch (ServiceDoesNotExistsException $e) {
       $this->assertTrue(true);
@@ -92,13 +97,14 @@ abstract class ServiceContainerTest extends \PHPUnit_Framework_TestCase
   
   public function testGetServiceByTag()
   {
-    $iTestServices = $this->loadServiceContainer()->getServicesByTag('ITest');
+    $serviceContainer = $this->loadServiceContainer();
+    $iTestServices = $serviceContainer->getServicesByTag('ITest');
     
     $this->assertEquals(1, count($iTestServices));
     
     $this->assertInstanceOf(__NAMESPACE__ . '\TaggedViaInterface', $iTestServices[0]);
     
-    $testServices = $this->loadServiceContainer()->getServicesByTag('Test');
+    $testServices = $serviceContainer->getServicesByTag('Test');
     
     $this->assertEquals(2, count($testServices));
     
@@ -106,13 +112,66 @@ abstract class ServiceContainerTest extends \PHPUnit_Framework_TestCase
     
     $this->assertEquals(
       0,
-      count($this->loadServiceContainer()->getServicesByTag('Unknow'))
+      count($serviceContainer->getServicesByTag('Unknow'))
     );
+  }
+  
+  public function testInjection()
+  {
+    $serviceContainer = $this->loadServiceContainer();
+    $injectedService = $serviceContainer->getServiceByName('injected');
+    $this->assertInstanceOf(__NAMESPACE__ . '\TestInjectedService', $injectedService);
+    
+    $tagService = $serviceContainer->getServiceByName("tag");
+    $itagService = $serviceContainer->getServiceByName("itag");
+    
+    $this->assertSame($tagService, $injectedService->getServiceTag());
+    $this->assertSame($itagService, $injectedService->getServiceItag());
+    $this->assertSame(array($itagService), $injectedService->getServices());
   }
 }
 
 if(!class_exists('Frosting\DependencyInjection\Tests\TestService')) {
   class TestService {}
+  
+  class TestInjectedService 
+  {
+    private $serviceTag;
+    private $serviceItag;
+    private $services;
+    
+    /**
+     * @Frosting\IService\DependencyInjection\Inject(serviceTag="tag")
+     */
+    public function injectService($serviceTag, $itag) 
+    {
+      $this->serviceTag = $serviceTag;
+      $this->serviceItag = $itag;
+    }
+    
+    /**
+     * @Frosting\IService\DependencyInjection\Inject(services="@ITest")
+     */
+    public function injectServiceByTag($services)        
+    {
+      $this->services = $services;
+    }
+    
+    public function getServiceTag()
+    {
+      return $this->serviceTag;
+    }
+    
+    public function getServiceItag()
+    {
+      return $this->serviceItag;
+    }
+    
+    public function getServices()
+    {
+      return $this->services;
+    }
+  }
   
   /**
    * @Frosting\IService\DependencyInjection\Tag("Test")

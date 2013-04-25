@@ -7,18 +7,38 @@
 
 namespace Frosting\Cache;
 
+use Frosting\IService\ObjectFactory\IObjectBuilder;
+use Frosting\IService\Cache\ICacheService;
+
 /**
  * Description of CategoryFactory
  *
  * @author Martin
+ * 
+ * @Frosting\IService\DependencyInjection\Tag("objectFactory.builder")
  */
-class CategoryBuilder
+class CategoryBuilder implements IObjectBuilder
 {
   /**
    * @var CacheEngine
    */
   private $cacheEngine;
 
+  /**
+   * @param \Frosting\IService\Cache\ICacheService $cache
+   * 
+   * @Frosting\IService\DependencyInjection\Inject
+   */
+  public function setCacheEngine(ICacheService $cache)
+  {
+    $this->cacheEngine = $cache;
+  }
+  
+  public function initializeObject($service,array $contextParameters = array()) 
+  {
+    $this->build($service,$contextParameters['serviceName'],$contextParameters['configuration']);
+  }
+  
   public function build($service, $serviceName, $configuration) 
   {
     if($service instanceof Category) {
@@ -58,7 +78,7 @@ class CategoryBuilder
     return implode(
       '_', 
       array_intersect_key(
-        $this->segregationKeys, 
+        array(), 
         array_flip($segregationKeys)
       )
     );

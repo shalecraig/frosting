@@ -18,7 +18,7 @@ namespace Frosting\Cache;
 class SystemCategory implements ICacheCategory
 {
   /**
-   * @var IStorage
+   * @var ICacheStorage
    */
   private $storage;
 
@@ -29,9 +29,9 @@ class SystemCategory implements ICacheCategory
   public function clear() {}
   
   /**
-   * @param IStorage $storage
+   * @param ICacheStorage $storage
    */
-  public function initialize(IStorage $storage)
+  public function initialize(ICacheStorage $storage)
   {
     $this->storage = $storage;
   }
@@ -41,7 +41,7 @@ class SystemCategory implements ICacheCategory
    */
   public function getName()
   {
-    return ICategory::NAME_SYSTEM;
+    return ICacheCategory::NAME_SYSTEM;
   }
   
   /**
@@ -64,7 +64,7 @@ class SystemCategory implements ICacheCategory
   }
   
   /**
-   * @return IStorage
+   * @return ICacheStorage
    */
   public function getStorage()
   {

@@ -1,6 +1,7 @@
 {
     "name": "mpoiriert/frosting",
     "type": "library",
+    "minimum-stability": "dev",
     "description": "Reusable library",
     "keywords": ["framework"],
     "license": "MIT",

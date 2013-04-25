@@ -1,19 +1,19 @@
 {
     "services": {
         "cache": {
-            "class": "Frosting\Cache\CacheService"
+            "class": "Frosting\\Cache\\CacheService"
         },
         "cache_category_builder": {
-            "class": "Frosting\Cache\CategoryBuilder"
+            "class": "Frosting\\Cache\\CategoryBuilder"
         },
         "cache.storage.default": {
-            "class": "Frosting\Cache\File\FileStorage",
+            "class": "Frosting\\Cache\\File\\FileStorage"
         },
         "cache.storage.disabled": {
-            "class": "Frosting\Cache\Disabled\DiabledStorage",
+            "class": "Frosting\\Cache\\Disabled\\DiabledStorage"
         },
         "cache.category.system": {
-            "class": "Frosting\Cache\SystemCategory",
+            "class": "Frosting\\Cache\\SystemCategory",
             "builders": ["cache_category_builder"],
             "configuration": {
                 "storage": "default",
@@ -21,7 +21,7 @@
             }
         },
         "cache.category.default": {
-            "class": "Frosting\Cache\Category",
+            "class": "Frosting\\Cache\\Category",
             "builders": ["cache_category_factory"],
             "configuration": {
                 "storage": "default",

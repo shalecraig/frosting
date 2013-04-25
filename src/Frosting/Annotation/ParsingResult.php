@@ -7,7 +7,8 @@
 
 namespace Frosting\Annotation;
 
-use \Frosting\IService\Annotation\IParsingResult;
+use Frosting\IService\Annotation\IParsingResult;
+use Frosting\IService\Annotation\NoParsingResultException;
 
 /**
  * Description of ParsingResult
@@ -24,7 +25,7 @@ class ParsingResult implements IParsingResult
   
   private $propertyAnnotations = array();
   
-  private $haveAnnotations = false;
+  private $hasAnnotations = false;
   
   public function __construct($className)
   {
@@ -54,7 +55,7 @@ class ParsingResult implements IParsingResult
   public function getMethodAnnotations($name,array $filters = array())
   {
     if(!array_key_exists($name, $this->methodAnnotations)) {
-      return array();
+      throw new NoParsingResultException('The method [' . $name .'] does not exists');
     }
     
     return $this->filters($this->methodAnnotations[$name], $filters);
@@ -73,7 +74,7 @@ class ParsingResult implements IParsingResult
   public function getPropertyAnnotations($name, array $filters = array())
   {
     if(!array_key_exists($name, $this->propertyAnnotations)) {
-      return array();
+      throw new NoParsingResultException('The property [' . $name .'] does not exists');
     }
     
     return $this->filters($this->propertyAnnotations[$name], $filters);
@@ -90,24 +91,24 @@ class ParsingResult implements IParsingResult
   public function setClassAnnotations($annotations)
   {
     $this->classAnnotations = $annotations;
-    $this->haveAnnotations = $this->haveAnnotations || count($annotations) > 0;
+    $this->hasAnnotations = $this->hasAnnotations || count($annotations) > 0;
   }
   
   public function setMethodAnnotations($methodName,$annotations)
   {
     $this->methodAnnotations[$methodName] = $annotations;
-    $this->haveAnnotations = $this->haveAnnotations || count($annotations) > 0;
+    $this->hasAnnotations = $this->hasAnnotations || count($annotations) > 0;
   }
   
   public function setPropertyAnnotations($propertyName,$annotations)
   {
     $this->propertyAnnotations[$propertyName] = $annotations;
-    $this->haveAnnotations = $this->haveAnnotations || count($annotations) > 0;
+    $this->hasAnnotations = $this->hasAnnotations || count($annotations) > 0;
   }
 
-  public function haveAnnotations()
+  public function hasAnnotations()
   {
-    return $this->haveAnnotations;
+    return $this->hasAnnotations;
   }
   
   public function mergeParentClass(ParsingResult $parentResult)
@@ -115,6 +116,6 @@ class ParsingResult implements IParsingResult
     $this->methodAnnotations = array_merge($parentResult->methodAnnotations,$this->methodAnnotations); 
     $this->classAnnotations = array_merge($parentResult->classAnnotations,$this->classAnnotations);
     $this->propertyAnnotations = array_merge($parentResult->propertyAnnotations,$this->propertyAnnotations);
-    $this->haveAnnotations = $this->haveAnnotations || $parentResult->haveAnnotations;
+    $this->hasAnnotations = $this->hasAnnotations || $parentResult->hasAnnotations;
   }
 }

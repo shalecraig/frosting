@@ -99,7 +99,7 @@ class Entry implements ICacheEntry
       
       $this->newborn = false;
       $this->value = $content->getValue();
-      $this->updateTimestamp = $content->getUpdateDate();
+      $this->updateTimestamp = $content->getUpdateTimestamp();
       $this->lifetime = $content->getLifetime();
     }
     

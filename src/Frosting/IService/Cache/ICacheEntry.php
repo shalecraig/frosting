@@ -51,5 +51,8 @@ interface ICacheEntry {
    */
   public function getLifetime();
   
+  /**
+   * @return \Frosting\IService\Cache\ICacheCategory
+   */
   public function getCategory();
 }

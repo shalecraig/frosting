@@ -11,11 +11,16 @@ namespace Frosting\IService\ObjectFactory;
  *
  * @author Martin
  */
-interface IObjectFactory {
+interface IObjectFactoryService {
     
   /**
    * @return mixed 
    */
   public function createObject($class,array $constructorArguments = array());
+  
+  /**
+   * @param \Frosting\IService\ObjectFactory\IObjectBuilder $objectBuilder
+   */
+  public function registerObjectBuilder(IObjectBuilder $builder);
 }
 

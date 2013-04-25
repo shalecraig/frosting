@@ -10,12 +10,12 @@ class Category implements ICacheCategory
   private $name;
   
   /**
-   * @var IStorage
+   * @var ICacheStorage
    */
   private $storage;
 
   /**
-   * @var ICategoryState
+   * @var CategoryState
    */
   private $systemState;
 
@@ -37,10 +37,10 @@ class Category implements ICacheCategory
   
   /**
    * @param string $name
-   * @param IStorage $storage
-   * @param ICategoryState $systemState
+   * @param ICacheStorage $storage
+   * @param CategoryState $systemState
    */
-  public function initialize($name,$segregationPrefix, IStorage $storage, ICategoryState $systemState)
+  public function initialize($name,$segregationPrefix, ICacheStorage $storage, CategoryState $systemState)
   {
     $this->name = $name;
     $this->storage = $storage;
@@ -55,11 +55,6 @@ class Category implements ICacheCategory
     return $this->segregationPrefix;
   }
   
-  /**
-   * @core\service\Inject("event_dispatcher")
-   * 
-   * @param \core\event\IDispatcher $dispatcher
-   */
   public function setEventDispatcher(IDispatcher $dispatcher)
   {
     $this->dispatcher = $dispatcher;
@@ -105,7 +100,7 @@ class Category implements ICacheCategory
   }
   
   /**
-   * @return IStorage
+   * @return ICacheStorage
    */
   public function getStorage()
   {

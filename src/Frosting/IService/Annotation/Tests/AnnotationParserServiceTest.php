@@ -7,6 +7,8 @@
 
 namespace Frosting\IService\Annotation\Tests;
 
+use Frosting\IService\Annotation\NoParsingResultException;
+
 /**
  * Description of AnnotationParserTest
  *
@@ -64,7 +66,12 @@ abstract class AnnotationParserServiceTest extends \PHPUnit_Framework_TestCase
     $service = $this->loadAnnotationParserService();
     
     $result = $service->parse($class);
+
+    $this->assertTrue($result->hasAnnotations());
+    
     $this->assertInstanceOf('Frosting\IService\Annotation\IParsingResult', $result);
+    
+    $this->assertEquals($result->getParsedClassName(), $class);
     
     $classAnnotations = $result->getClassAnnotations();
     $this->validateAnnotation($expectedClassAnnotations, $classAnnotations);
@@ -97,6 +104,45 @@ abstract class AnnotationParserServiceTest extends \PHPUnit_Framework_TestCase
     $this->assertSameSize($expectedClassAnnotations, $resultAnnotations);
     foreach($resultAnnotations as $index => $annotation) {
       $this->assertInstanceOf($expectedClassAnnotations[$index], $annotation);
+    }
+  }
+  
+  public function testParseProperty()
+  {
+    $service = $this->loadAnnotationParserService();
+   
+    $result = $service->parse(__NAMESPACE__ . '\TestAnnotedProperty');
+    $this->assertInstanceOf('Frosting\IService\Annotation\IParsingResult', $result);
+    
+    $propertyAnnotations = $result->getAllPropertyAnnotations();
+    
+    $this->assertArrayHasKey('property', $propertyAnnotations);
+    $this->assertCount(1, $propertyAnnotations['property']);
+    
+    $this->assertInstanceOf(__NAMESPACE__ . '\TestAnnotation', $propertyAnnotations['property'][0]);
+    
+    $propertyAnnotation = $result->getPropertyAnnotations('property');
+    $this->assertCount(1, $propertyAnnotation);
+    $this->assertInstanceOf(__NAMESPACE__ . '\TestAnnotation', $propertyAnnotation[0]);
+  }
+  
+  public function testNoParsingResultException()
+  {
+    $service = $this->loadAnnotationParserService();
+    $result = $service->parse(__NAMESPACE__ . '\TestAnnotation');
+    
+    try {
+      $result->getMethodAnnotations('doesNotExists');
+      $this->fail('Getting annotations of a not existing method should throw a exception');
+    } catch(NoParsingResultException $e) {
+      $this->assertTrue(true);
+    }
+    
+    try {
+      $result->getPropertyAnnotations('doesNotExists');
+      $this->fail('Getting annotations of a not existing property should throw a exception');
+    } catch(NoParsingResultException $e) {
+      $this->assertTrue(true);
     }
   }
 }
@@ -151,4 +197,13 @@ if(!class_exists(__NAMESPACE__ . '\TestAnnotation')) {
    * @TestAnnotation
    */
   class TestAnnotedClassImplement implements TestAnnotatedInterface {}
+  
+  class TestAnnotedProperty 
+  {
+    /**
+     * @TestAnnotation
+     * @var type 
+     */
+    public $property;
+  }
 }

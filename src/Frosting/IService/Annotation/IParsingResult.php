@@ -25,4 +25,6 @@ interface IParsingResult
   public function getAllPropertyAnnotations(array $filters = array());
   
   public function getPropertyAnnotations($name,array $filters = array());
+  
+  public function hasAnnotations();
 }

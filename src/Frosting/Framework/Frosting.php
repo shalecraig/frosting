@@ -32,7 +32,7 @@ class Frosting
   
   public function loadServiceContainer($configuration)
   {
-    return new ServiceContainer($configuration);
+    return ServiceContainer::factory($configuration);
   }
   
   public function getServiceContainer()

@@ -3,7 +3,10 @@
 namespace Frosting\Cache;
 
 
-use \Frosting\IService\Cache\ICacheService;
+use Frosting\IService\Cache\ICacheService;
+use Frosting\IService\DependencyInjection\IServiceContainer;
+use Frosting\IService\Cache\CategoryDoesNotExistsException;
+use Frosting\IService\DependencyInjection\ServiceDoesNotExistsException;
 
 /**
  * The key master: used by clients to access the key-value caching system
@@ -22,6 +25,15 @@ class CacheEngine implements ICacheService
    * @var \Frosting\IService\DependencyInjection\IServiceContainer
    */
   private $serviceContainer;
+  
+  /**
+   * @Frosting\IService\DependencyInjection\Inject
+   * @param \Frosting\IService\DependencyInjection\IServiceContainer $serviceContainer
+   */
+  public function setServiceContainer(IServiceContainer $serviceContainer)
+  {
+    $this->serviceContainer = $serviceContainer;
+  }
   
   /**
    * The main method used by clients, gives access to cache entries
@@ -51,9 +63,19 @@ class CacheEngine implements ICacheService
   {
     $serviceNames = $this->serviceContainer->getServiceNames();
     
-    return array_filter($serviceNames, function($serviceName) {
+    $categoryServices = array_filter($serviceNames, function($serviceName) {
       return strpos($serviceName, 'cache.category.') === 0;
     });
+    
+    array_walk(
+      $categoryServices,
+      function(&$serviceName) { 
+        list(,,$serviceName) = explode('.',$serviceName);
+      }
+    );
+    
+    //That way we restart the index at 0
+    return array_values($categoryServices);
   }
   
   /**
@@ -62,7 +84,11 @@ class CacheEngine implements ICacheService
    */
   public function getCategory($name)
   {
-    return $this->serviceContainer->getServiceByName('cache.category.' . $name);
+    try {
+      return $this->serviceContainer->getServiceByName('cache.category.' . $name);
+    } catch (ServiceDoesNotExistsException $e) {
+      throw new CategoryDoesNotExistsException('The category named [' . $name .'] does not exists.',null,$e);
+    }
   }
 
   /**
