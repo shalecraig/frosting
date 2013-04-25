@@ -65,10 +65,15 @@ class Category implements ICacheCategory
    */
   public function clear()
   {
+    //We do a clone to be able to keep the old value and call clear on storage
+    //after it have been clear and warmup is completed
+    $category = clone $this;
     $this->version++;
-    $this->dispatcher->notify(new \core\event\Event($this,'Cache.' . $this->getName() . '.clear'));
+   // $this->dispatcher->notify(new \core\event\Event($this,'Cache.' . $this->getName() . '.clear'));
     $this->clearDate = time();
     $this->systemState->updateData($this);
+    
+    $this->storage->clear($category);
     return $this;
   }
   

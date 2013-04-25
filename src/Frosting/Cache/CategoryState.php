@@ -40,11 +40,11 @@ class CategoryState
   
   /**
    * This is usually called just before and after a category's clearing process
-   * @param ICategory $category
+   * @param ICacheCategory $category
    */
-  public function updateData(ICategory $category)
+  public function updateData(ICacheCategory $category)
   {
-    $this->data['createdAt'] = $category->getClearDate();
+    $this->data['createdAt'] = $category->getVersionCreationTimestamp();
     $this->data['version'] = $category->getVersion();
     $this->entry->set($this->data);
   }

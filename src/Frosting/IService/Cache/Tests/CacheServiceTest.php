@@ -148,4 +148,31 @@ abstract class CacheServiceTest extends \PHPUnit_Framework_TestCase
       $this->assertTrue(true);
     }
   }
+  
+  public function testCategory()
+  {
+    $cacheService = $this->loadCacheService();
+    $entryNamename = uniqid();
+    $entry = $cacheService->entryFactory($entryNamename,ICacheCategory::NAME_DEFAULT);
+    
+      
+    //This delete is just to prevent that a entry could be there due to a
+    //test failure
+    $entry->delete();
+    
+    $entry->set("test");
+    
+    $this->assertEquals("test",$entry->get());
+    
+    $entry->getCategory()->clear();
+    
+    $this->assertEquals("test",$entry->get());
+    
+     try {
+      $entry->get(true);
+      $this->fail('Must throw a since we clear the category the entry was in.');
+    } catch (ValueNotFoundException $e) {
+      $this->assertTrue(true);
+    }
+  }
 }
