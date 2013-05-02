@@ -152,8 +152,8 @@ abstract class CacheServiceTest extends \PHPUnit_Framework_TestCase
   public function testCategory()
   {
     $cacheService = $this->loadCacheService();
-    $entryNamename = uniqid();
-    $entry = $cacheService->entryFactory($entryNamename,ICacheCategory::NAME_DEFAULT);
+    $entryName = uniqid();
+    $entry = $cacheService->entryFactory($entryName,ICacheCategory::NAME_DEFAULT);
     
       
     //This delete is just to prevent that a entry could be there due to a

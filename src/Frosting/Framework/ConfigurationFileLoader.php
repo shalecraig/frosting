@@ -16,6 +16,10 @@ class ConfigurationFileLoader
 {
   public function load($filename)
   {
+    if(is_array($filename)) {
+      return $filename;
+    }
+    
     if(!file_exists($filename)) {
       return null;
     }

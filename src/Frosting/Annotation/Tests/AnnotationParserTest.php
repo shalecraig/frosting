@@ -17,8 +17,8 @@ use Frosting\Annotation\AnnotationParser;
  */
 class AnnotationParserTest extends AnnotationParserServiceTest
 {
-  protected function getAnnotationParserService() 
+  protected function getAnnotationParserService($configuration) 
   {
-    return new AnnotationParser();
+    return new AnnotationParser($configuration);
   }
 }

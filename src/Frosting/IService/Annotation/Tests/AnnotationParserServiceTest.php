@@ -21,7 +21,7 @@ abstract class AnnotationParserServiceTest extends \PHPUnit_Framework_TestCase
   /**
    * @return \Frosting\IService\Annotation\IAnnotationParserService
    */
-  abstract protected function getAnnotationParserService();
+  abstract protected function getAnnotationParserService($configuration);
   
   /**
    * @return \Frosting\IService\Annotation\IAnnotationParserService
@@ -29,7 +29,7 @@ abstract class AnnotationParserServiceTest extends \PHPUnit_Framework_TestCase
   private function loadAnnotationParserService()
   {
     if(is_null($this->annotationParserService)) {
-      $this->annotationParserService = $this->getAnnotationParserService();
+      $this->annotationParserService = $this->getAnnotationParserService(array('namespaces'=>array(__NAMESPACE__)));
       $this->assertInstanceOf('\Frosting\IService\Annotation\IAnnotationParserService', $this->annotationParserService);
     }
     

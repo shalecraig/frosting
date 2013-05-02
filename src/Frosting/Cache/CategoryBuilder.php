@@ -15,7 +15,7 @@ use Frosting\IService\Cache\ICacheService;
  *
  * @author Martin
  * 
- * @Frosting\IService\DependencyInjection\Tag("objectFactory.builder")
+ * @Tag("objectFactory.builder")
  */
 class CategoryBuilder implements IObjectBuilder
 {
@@ -27,7 +27,7 @@ class CategoryBuilder implements IObjectBuilder
   /**
    * @param \Frosting\IService\Cache\ICacheService $cache
    * 
-   * @Frosting\IService\DependencyInjection\Inject
+   * @Inject
    */
   public function setCacheEngine(ICacheService $cache)
   {

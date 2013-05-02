@@ -7,6 +7,7 @@ use Frosting\IService\Cache\ICacheService;
 use Frosting\IService\DependencyInjection\IServiceContainer;
 use Frosting\IService\Cache\CategoryDoesNotExistsException;
 use Frosting\IService\DependencyInjection\ServiceDoesNotExistsException;
+use Frosting\Framework\Frosting;
 
 /**
  * The key master: used by clients to access the key-value caching system
@@ -27,7 +28,7 @@ class CacheEngine implements ICacheService
   private $serviceContainer;
   
   /**
-   * @Frosting\IService\DependencyInjection\Inject
+   * @Inject
    * @param \Frosting\IService\DependencyInjection\IServiceContainer $serviceContainer
    */
   public function setServiceContainer(IServiceContainer $serviceContainer)
@@ -99,5 +100,18 @@ class CacheEngine implements ICacheService
   public function getStorage($name)
   {
     return $this->serviceContainer->getServiceByName("cache.storage." . $name);
+  }
+  
+  /**
+   * @param string $configuration
+   * @return ICacheService
+   */
+  public static function factory($configuration = null)
+  {
+    if(is_null($configuration)) {
+      $configuration = __DIR__ . '/frosting.json';
+    }
+    
+    return Frosting::serviceFactory($configuration,self::FROSTING_SERVICE_NAME);
   }
 }

@@ -8,13 +8,7 @@
 namespace Frosting\DependencyInjection;
 
 use Frosting\IService\DependencyInjection\IServiceContainer;
-use Frosting\IService\DependencyInjection\ServiceDoesNotExistsException;
-use Frosting\IService\DependencyInjection\ServiceDisabledException;
-use Frosting\IService\Annotation\IAnnotationParserService;
-use Frosting\IService\DependencyInjection\Tag;
-use Frosting\IService\ObjectFactory\IObjectFactoryService;
-use Frosting\Annotation\AnnotationParser;
-use Frosting\ObjectFactory\ObjectFactory;
+use Frosting\DependencyInjection\Generator\ContainerGenerator;
 
 /**
  * Description of ServiceContainer
@@ -23,138 +17,93 @@ use Frosting\ObjectFactory\ObjectFactory;
  */
 class ServiceContainer implements IServiceContainer
 {
-  private $services = array();
+  /**
+   * @var \Frosting\IService\DependencyInjection\IServiceContainer 
+   */
+  private $generatedContainer = null;
   
-  private $serviceTags;
-  
-  private $configuration;
-  
-  public function __construct(array $configuration) 
+  protected function initiliaze() 
   {
-    $this->configuration = $configuration;
-    $this->services['serviceContainer'] = $this;
-  }
-  
-  public function setAnnotationParser(IAnnotationParserService $annotationParser)
-  {
-    $this->services['annotationParser'] = $annotationParser;
-  }
-  
-  public function setObjectFactory(IObjectFactoryService $objectFactory)
-  {
-    $this->services['objectFactory'] = $objectFactory;
-    $objectFactory->registerObjectBuilder(
-      new InjecterObjectBuilder($this)
-    );
-    
-    $tags = $this->loadServicesTag();
-    if(array_key_exists('objectFactory.builder', $tags)) {
-      foreach($tags['objectFactory.builder'] as $serviceName) {
-        $objectFactory->registerObjectBuilder($this->getServiceByName($serviceName));
-      }
+    $objectFactory = $this->generatedContainer->getServiceByName("objectFactory");
+    foreach($this->getServicesByTag("objectFactory.builder") as $service) {
+      $objectFactory->registerObjectBuilder($service);
     }
   }
   
-  public function getServiceNames() 
+  public function shutdown() 
   {
-    return array_keys(
-      array_filter($this->configuration, function($configuration) {
-        return !(array_key_exists('disabled',$configuration) && $configuration['disabled']);
-      })
-    );  
+    $this->generatedContainer->shutdown();  
   }
-  
+ 
   public function getServiceByName($name)
   {
-    if(!array_key_exists($name, $this->services)) {
-      if(!array_key_exists($name, $this->configuration)) {
-        throw new ServiceDoesNotExistsException('The service named [' . $name . '] does not exists.');
-      }
-      
-      if(array_key_exists('disabled',$this->configuration[$name]) && $this->configuration[$name]['disabled']) {
-        throw new ServiceDisabledException('The service named [' . $name . '] is disabled.');
-      }
-      
-      $configuration = $this->getServiceConfiguration($name);
-      $class = $this->configuration[$name]['class'];
-      $this->services[$name] = $this->getObjectFactory()
-        ->createObject($class,array(),array('serviceName'=>$name,'configuration'=>$configuration));
-    }
-    
-    return $this->services[$name];
-  }
-  
-  private function loadServicesTag()
-  {
-    if(is_null($this->serviceTags)) {
-      $this->serviceTags = array();
-      $annotationParser = $this->getAnnotationParser();
-      foreach($this->getServiceNames() as $name) {
-        $serviceClass = $this->configuration[$name]['class'];
-        $result = $annotationParser->parse($serviceClass);
-        $annotations = $result->getClassAnnotations(array(function($annotation) {return $annotation instanceof Tag;}));
-        
-        foreach($annotations as $annotation) {
-          $this->serviceTags[$annotation->getTagName()][] = $name;
-        }
-      }
-    }
-    
-    return $this->serviceTags;
-  }
-  
-  public function getServicesByTag($tag)
-  {
-    $serviceTags = $this->loadServicesTag();
-    
-    if(!array_key_exists($tag, $serviceTags)) {
-      return array();
-    }
-    
-    $result = array();
-    
-    foreach($serviceTags[$tag] as $serviceName) {
-      $result[] = $this->getServiceByName($serviceName);
-    }
-    
-    return $result;
+    return $this->generatedContainer->getServiceByName($name);
   }
   
   /**
-   * @return \Frosting\IService\Annotation\IAnnotationParserService
-   */
-  private function getAnnotationParser()
-  {
-    return $this->getServiceByName('annotationParser');
-  }
-  
-  /**
+   * Get all services that are tag
    * 
-   * @return \Frosting\IService\ObjectFactory\IObjectFactoryService
+   * @param string $tag The tag the service must be done with
+   * 
+   * @return array of service objects 
    */
-  private function getObjectFactory()
+  public function getServicesByTag($tag) 
   {
-    return $this->getServiceByName('objectFactory');
+    return $this->generatedContainer->getServicesByTag($tag);
+  }
+
+  public function getServiceNames() 
+  {
+    return $this->generatedContainer->getServiceNames();
   }
   
   public function getServiceConfiguration($name) 
   {
-    if(!array_key_exists($name, $this->configuration)) {
-      throw new ServiceDoesNotExistsException('The service named [' . $name . '] does not exists.');
-    }
-    
-    if(array_key_exists('configuration', $this->configuration[$name])) {
-      return $this->configuration[$name]['configuration'];
-    }
-    
-    return null;
+    return $this->generatedContainer->getServiceConfiguration($name);
   }
   
   public static function factory($configuration)
   {
-    $serviceContainer = new static($configuration);
-    $serviceContainer->setAnnotationParser(new AnnotationParser());
-    $serviceContainer->setObjectFactory(new ObjectFactory());
-    return $serviceContainer;
+    $neededServices = array(
+      'serviceContainer' => get_called_class(),
+      'annotationParser' => 'Frosting\Annotation\AnnotationParser',
+      'objectFactory' => 'Frosting\ObjectFactory\ObjectFactory'
+    );
+    
+    $services = array();
+    
+    foreach($neededServices as $serviceName => $instanceOf) {
+      if(isset($configuration[$serviceName]['class'])) {
+        $reflectionClass = new \ReflectionClass($configuration[$serviceName]['class']);
+        if($reflectionClass->isSubclassOf($instanceOf)) {
+          throw new \RuntimeException('The service named [' . $serviceName . '] must be a instance of [' . $instanceOf .']');
+        }
+        $services[$serviceName] = $reflectionClass->newInstance();
+      } else {
+        $services[$serviceName] = new $instanceOf();
+      }
+    }
+    
+    $services['annotationParser']->addNamespace(__NAMESPACE__);
+
+    $generator = new ContainerGenerator($services['annotationParser'],$configuration);
+    $path = sys_get_temp_dir();
+    $className = $generator->generate($path, true);
+    
+    require_once($path . '/' . $className . '.php');
+ 
+    $container = $services['serviceContainer'];
+    
+    $container->generatedContainer = new $className($services);
+    $container->generatedContainer->getServiceByName("objectFactory")
+      ->registerClassCreator(
+        new \Frosting\ObjectFactory\AnnotationClassCreator($services['annotationParser'])
+      );
+    //$container->generatedContainer->getServiceByName("objectFactory")->registerObjectBuilder(new InjecterObjectBuilder($container));
+    
+    $services['objectFactory']->setServiceContainer($container);
+    
+    $container->initiliaze();
+    return $container;
   }
 }

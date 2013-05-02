@@ -1,0 +1,7 @@
+{
+    "services": {
+        "eventDispatcher": {
+            "class": "Frosting\\EventDispatcher\\EventDispatcher"
+        }
+    }
+}

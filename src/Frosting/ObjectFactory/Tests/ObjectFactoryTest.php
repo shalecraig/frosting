@@ -9,6 +9,6 @@ class ObjectFactoryTest extends ObjectFactoryServiceTest
 {
   public function getObjectFactory() 
   {
-    return new ObjectFactory();
+    return ObjectFactory::factory();
   }
 }

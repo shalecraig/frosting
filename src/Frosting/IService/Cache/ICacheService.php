@@ -14,6 +14,11 @@ namespace Frosting\IService\Cache;
 interface ICacheService
 {
   /**
+   * The service name use as a reference
+   */
+  const FROSTING_SERVICE_NAME = 'cache';
+   
+  /**
    * Return all the existings category names
    */
   public function getAllCategoryNames();

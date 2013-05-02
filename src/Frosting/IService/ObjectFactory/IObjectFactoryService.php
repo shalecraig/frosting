@@ -12,7 +12,11 @@ namespace Frosting\IService\ObjectFactory;
  * @author Martin
  */
 interface IObjectFactoryService {
-    
+  /**
+   * The service name use as a reference
+   */
+  const FROSTING_SERVICE_NAME = 'objectFactory';
+  
   /**
    * @return mixed 
    */

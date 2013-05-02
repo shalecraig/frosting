@@ -8,7 +8,7 @@
 namespace Frosting\Annotation;
 
 use \Doctrine\Common\Annotations\AnnotationRegistry;
-use \Doctrine\Common\Annotations\AnnotationReader;
+use \Doctrine\Common\Annotations\SimpleAnnotationReader;
 use \Frosting\IService\Annotation\IAnnotationParserService;
 
 /**
@@ -19,16 +19,29 @@ use \Frosting\IService\Annotation\IAnnotationParserService;
 class AnnotationParser implements IAnnotationParserService
 {
   /**
-   * @var \Doctrine\Common\Annotations\AnnotationReader
+   * @var \Doctrine\Common\Annotations\SimpleAnnotationReader
    */
   private $reader = null;
   
-  public function __construct()
+  public function __construct(array $configuration = array())
   {
-    $this->reader = new AnnotationReader();
+    $this->reader = new SimpleAnnotationReader();
     AnnotationRegistry::registerLoader(function($class) {
       return class_exists($class,true);
     });
+
+    if(!isset($configuration['namespaces'])) {
+      $configuration['namespaces'] = array();
+    }
+
+    foreach($configuration['namespaces'] as $namespace) {
+      $this->reader->addNamespace($namespace);
+    }
+  }
+  
+  public function addNamespace($namespace)
+  {
+    $this->reader->addNamespace($namespace);
   }
   
   /**

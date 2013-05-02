@@ -1,0 +1,13 @@
+{
+    "imports": [
+      "../EventDispatcher/frosting.json"
+    ],
+    "services": {
+        "serviceContainer": {
+            "class": "Frosting\\DependencyInjection\\ServiceContainer",
+        },
+        "listenAnnotationConnector": {
+            "class": "Frosting\\Framework\\EventDispatcher\\ListenAnnotationConnector"
+        }
+    }
+}

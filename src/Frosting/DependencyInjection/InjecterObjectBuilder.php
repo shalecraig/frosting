@@ -8,7 +8,7 @@
 namespace Frosting\DependencyInjection;
 
 use \Frosting\IService\ObjectFactory\IObjectBuilder;
-use \Frosting\IService\DependencyInjection\Inject;
+use \Frosting\IService\DependencyInjection\Inject as BaseInject;
 use \Frosting\IService\DependencyInjection\IServiceContainer;
 
 /**
@@ -32,7 +32,7 @@ class InjecterObjectBuilder implements IObjectBuilder
   {
     $result = $this->getAnnotationParser()->parse(get_class($mixed));
     $methodAnnotations = $result->getAllMethodAnnotations(
-      array(function($annotation) {return $annotation instanceof Inject;})
+      array(function($annotation) {return $annotation instanceof BaseInject;})
     );
       
     foreach($methodAnnotations as $methodName => $annotations) {

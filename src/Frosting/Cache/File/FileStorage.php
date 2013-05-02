@@ -23,7 +23,7 @@ class FileStorage implements ICacheStorage
   /**
    * @param array $config
    * 
-   * @Frosting\IService\DependencyInjection\Inject(configuration="$")
+   * @Inject(configuration="$")
    */
   public function initialize($configuration = array())
   {

@@ -141,7 +141,7 @@ if(!class_exists('Frosting\DependencyInjection\Tests\TestService')) {
     private $services;
     
     /**
-     * @Frosting\IService\DependencyInjection\Inject(serviceTag="tag")
+     * @Inject(serviceTag="tag")
      */
     public function injectService($serviceTag, $itag) 
     {
@@ -150,7 +150,7 @@ if(!class_exists('Frosting\DependencyInjection\Tests\TestService')) {
     }
     
     /**
-     * @Frosting\IService\DependencyInjection\Inject(services="@ITest")
+     * @Inject(services="@ITest")
      */
     public function injectServiceByTag($services)        
     {
@@ -174,17 +174,17 @@ if(!class_exists('Frosting\DependencyInjection\Tests\TestService')) {
   }
   
   /**
-   * @Frosting\IService\DependencyInjection\Tag("Test")
+   * @Tag("Test")
    */
   class Tagged {}
   
   /**
-   * @Frosting\IService\DependencyInjection\Tag("ITest")
+   * @Tag("ITest")
    */
   interface ITagged {}
   
   /**
-   * @Frosting\IService\DependencyInjection\Tag("Test")
+   * @Tag("Test")
    */
   class TaggedViaInterface implements ITagged {}
 }

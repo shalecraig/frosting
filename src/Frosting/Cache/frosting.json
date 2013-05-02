@@ -1,7 +1,7 @@
 {
     "services": {
         "cache": {
-            "class": "Frosting\\Cache\\CacheService"
+            "class": "Frosting\\Cache\\CacheEngine"
         },
         "cache_category_builder": {
             "class": "Frosting\\Cache\\CategoryBuilder"
@@ -10,7 +10,7 @@
             "class": "Frosting\\Cache\\File\\FileStorage"
         },
         "cache.storage.disabled": {
-            "class": "Frosting\\Cache\\Disabled\\DiabledStorage"
+            "class": "Frosting\\Cache\\Disabled\\DisabledStorage"
         },
         "cache.category.system": {
             "class": "Frosting\\Cache\\SystemCategory",

@@ -111,6 +111,28 @@ class ParsingResult implements IParsingResult
     return $this->hasAnnotations;
   }
   
+  public function getAllAnnotations(array $filters = array())
+  {
+    $result = array();
+    foreach($this->getClassAnnotations($filters) as $annotation) {
+      $result[] = array('context'=>'class','annotation'=>$annotation,'contextName'=>$this->className);
+    }
+    
+    foreach($this->getAllMethodAnnotations($filters) as $methodName => $annotations) {
+      foreach($annotations as $annotation) {
+        $result[] = array('context'=>'method','annotation'=>$annotation,'contextName'=>$methodName);
+      }
+    }
+    
+    foreach($this->getAllPropertyAnnotations($filters) as $propertyName => $annotations) {
+      foreach($annotations as $annotation) {
+        $result[] = array('context'=>'property','annotation'=>$annotation,'contextName'=>$propertyName);
+      }
+    }
+    
+    return $result;
+  }
+  
   public function mergeParentClass(ParsingResult $parentResult)
   {    
     $this->methodAnnotations = array_merge($parentResult->methodAnnotations,$this->methodAnnotations); 
