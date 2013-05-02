@@ -1,4 +1,7 @@
-{
+{   
+    "imports": [
+        "../EventDispatcher/frosting.json"
+    ],
     "services": {
         "cache": {
             "class": "Frosting\\Cache\\CacheEngine"

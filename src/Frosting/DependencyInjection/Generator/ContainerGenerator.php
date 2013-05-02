@@ -28,7 +28,7 @@ class ContainerGenerator
   private $annotationParser;
   
   /**
-   * @var \core\annotation\ParsingResult
+   * @var \Frosting\IService\Annotation\IParsingResult
    */
   private $currentParsingResult;
   
@@ -55,12 +55,10 @@ class ContainerGenerator
   /**
    * @param string $serviceName
    * @param string $tag
-   * @return \core\service\generator\ContainerGenerator 
    */
   public function tagService($serviceName, $tag)
   {
     $this->servicesTags[$tag][] = $serviceName;
-    return $this;
   }
   
   /**
@@ -199,7 +197,7 @@ class ContainerGenerator
   }
   
   /**
-   * @return \core\annotation\ParsingResult
+   * @return \Frosting\IService\Annotation\IParsingResult
    */
   public function getCurrentParsingResult()
   {

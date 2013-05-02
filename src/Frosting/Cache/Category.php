@@ -2,6 +2,8 @@
 
 namespace Frosting\Cache;
 
+use \Frosting\IService\EventDispatcher\IEventDispatcherService;
+
 class Category implements ICacheCategory
 {
   /**
@@ -31,9 +33,9 @@ class Category implements ICacheCategory
 
   /**
    *
-   * @var IDispatcher
+   * @var \Frosting\IService\EventDispatcher\IEventDispatcherService
    */
-  private $dispatcher;
+  private $eventDispatcher;
   
   /**
    * @param string $name
@@ -50,14 +52,19 @@ class Category implements ICacheCategory
     $this->segregationPrefix = $segregationPrefix;
   }
   
+  /**
+   * @param \Frosting\IService\EventDispatcher\IEventDispatcherService $eventDispatcher
+   * 
+   * @Inject
+   */
+  public function setEventDispatcher(IEventDispatcherService $eventDispatcher)
+  {
+    $this->eventDispatcher = $eventDispatcher;
+  }
+  
   public function getSegregationPrefix()
   {
     return $this->segregationPrefix;
-  }
-  
-  public function setEventDispatcher(IDispatcher $dispatcher)
-  {
-    $this->dispatcher = $dispatcher;
   }
   
   /**
@@ -69,7 +76,7 @@ class Category implements ICacheCategory
     //after it have been clear and warmup is completed
     $category = clone $this;
     $this->version++;
-   // $this->dispatcher->notify(new \core\event\Event($this,'Cache.' . $this->getName() . '.clear'));
+    $this->eventDispatcher->dispatch('Cache.' . $this->getName() . '.clear', $this);
     $this->clearDate = time();
     $this->systemState->updateData($this);
     
