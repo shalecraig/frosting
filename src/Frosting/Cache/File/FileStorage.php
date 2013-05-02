@@ -7,8 +7,6 @@ use Frosting\IService\Cache\ValueNotFoundException;
 use Frosting\Cache\ICacheCategory;
 use Frosting\Cache\EntryContent;
 
-use \Woozworld\Cache\StorageConfigurationException;
-
 /**
  * File storage class
  */
