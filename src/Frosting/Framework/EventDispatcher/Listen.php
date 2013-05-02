@@ -9,6 +9,7 @@ namespace Frosting\Framework\EventDispatcher;
 
 use Frosting\DependencyInjection\Generator\IServiceContainerGeneratorAnnotation;
 use Frosting\DependencyInjection\Generator\ContainerGenerator;
+use Frosting\IService\EventDispatcher\IEventDispatcherService;
 
 
 /**
@@ -30,8 +31,8 @@ class Listen implements IServiceContainerGeneratorAnnotation
   
   public function __construct($values)
   {
-    $this->eventName = !is_array($values) ? $values : $values['eventName'];
-    $this->priority = is_array($values) && isset($values['priority']) ? $values['priority'] : 0;
+    $this->eventName = isset($values['value']) ? $values['value'] : $values['eventName'];
+    $this->priority = isset($values['priority']) ? $values['priority'] : 0;
   }
   
   public function getEventName()
@@ -56,12 +57,12 @@ class Listen implements IServiceContainerGeneratorAnnotation
   
   public static function connect(ContainerGenerator $generator, $eventName, $serviceName, $methodName)
   {
-    $method = $generator->getServiceGetterMethod("event_dispatcher");
+    $method = $generator->getServiceGetterMethod(IEventDispatcherService::FROSTING_SERVICE_NAME);
     $code = '
-    $service->connect("' . $eventName . '",function(\core\event\IEvent $event) use ($serviceContainer) {
-      $listener = array($serviceContainer->getService("' . $serviceName .'"),"' . $methodName . '");
-      $arguments = \Woozworld\Application\MethodParametersMapper::getArguments($event->getParameters(), $listener, array($event, $event->getSubject()));
-      call_user_func_array($listener, $arguments);
+    $service->addListener("' . $eventName . '",function(\Frosting\IService\EventDispatcher\IEvent $event) use ($serviceContainer) {
+      $listener = array($serviceContainer->getServiceByName("' . $serviceName .'"),"' . $methodName . '");
+      $serviceContainer->getServiceByName(\Frosting\IService\Invoker\IInvokerService::FROSTING_SERVICE_NAME)
+        ->invoke($listener,$event->getParameters(),array($event, $event->getSubject()));
     });
 ';
     $method->setCode($method->getCode() . "\n$code");

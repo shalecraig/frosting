@@ -1,0 +1,7 @@
+{
+    "services": {
+        "invoker": {
+            "class": "Frosting\\Invoker\\Invoker"
+        }
+    }
+}

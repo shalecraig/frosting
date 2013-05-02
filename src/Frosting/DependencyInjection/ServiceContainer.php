@@ -85,6 +85,7 @@ class ServiceContainer implements IServiceContainer
     }
     
     $services['annotationParser']->addNamespace(__NAMESPACE__);
+    $services['annotationParser']->addNamespace("Frosting\Framework\EventDispatcher");
 
     $generator = new ContainerGenerator($services['annotationParser'],$configuration);
     $path = sys_get_temp_dir();

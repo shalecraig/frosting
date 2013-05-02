@@ -9,6 +9,6 @@ class EventDispatcherTest extends EventDispatcherServiceTest
 {
   protected function getEventDispatcherService() 
   {
-    return new EventDispatcher();
+    return EventDispatcher::factory();
   }
 }

@@ -7,7 +7,9 @@
 
 namespace Frosting\Framework\Tests;
 
-use \Frosting\Framework\Frosting;
+use Frosting\Framework\Frosting;
+use Frosting\IService\EventDispatcher\IEvent;
+use Frosting\IService\EventDispatcher\IEventDispatcherService;
 
 /**
  * Description of FrostingIntegrationTest
@@ -19,12 +21,47 @@ class FrostingIntegrationTest extends \PHPUnit_Framework_TestCase
   private $frosting = null;
   
   public function setUp() {
-    //$this->frosting = new \Frosting(dirname(__FILE__) . '/../');
+    $this->frosting = new Frosting(__DIR__ . '/fixtures/integrationTest.json');
   }
   
   public function testListenConnection() 
   {
+    $serviceContainer = $this->frosting->getServiceContainer();
+    $serviceDispatcher = $serviceContainer->getServiceByName(IEventDispatcherService::FROSTING_SERVICE_NAME);
+    $serviceForTest = $serviceContainer->getServiceByName("serviceForTest");
+            
+    /* @var $serviceDispatcher Frosting\IService\EventDispatcher\IEventDispatcherService */
+    $parameter = "namedParameter";
+    $event = $serviceDispatcher->dispatch("Test", $this, array("namedParameter"=>$parameter));
     
+    $this->assertSame($event, $serviceForTest->event);
+    $this->assertSame($this, $serviceForTest->typedParameter);
+    $this->assertEquals(10,$serviceForTest->defaultValue);
+    $this->assertEquals($parameter, $serviceForTest->namedParameter);
+  }
+}
+
+class ServiceForTest
+{
+  public $event = null;
+  public $namedParameter = null;
+  public $typedParameter = null;
+  public $defaultValue = null;
+  
+  public function reset()
+  {
+    foreach(get_object_vars($this) as $key => $value) {
+      $this->{$key} = $value;
+    }
+  }
+  /**
+   * @Listen("Test")
+   */
+  public function listen(IEvent $event, $namedParameter, FrostingIntegrationTest $typedParameter, $defaultValue = 10)
+  {
+    foreach(get_defined_vars() as $key => $value) {
+      $this->{$key} = $value;
+    }
   }
 }
 

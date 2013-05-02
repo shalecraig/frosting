@@ -174,7 +174,7 @@ class ObjectFactory implements IObjectFactoryService
   }
   
   /**
-   * @param string $configuration
+   * @param mixed $configuration
    * @return IObjectFactoryService
    */
   public static function factory($configuration = null)

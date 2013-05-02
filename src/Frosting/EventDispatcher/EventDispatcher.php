@@ -2,9 +2,11 @@
 
 namespace Frosting\EventDispatcher;
 
-use \Frosting\IService\EventDispatcher\IEventDispatcherService;
-use \Symfony\Component\EventDispatcher\EventDispatcher as ProxiedEventDispatcher;
-use \Frosting\IService\EventDispatcher\IEvent;
+use Frosting\IService\EventDispatcher\IEventDispatcherService;
+use Symfony\Component\EventDispatcher\EventDispatcher as ProxiedEventDispatcher;
+use Frosting\IService\EventDispatcher\IEvent;
+use Frosting\Framework\Frosting;
+use Frosting\IService\Invoker\IInvokerService;
 
 class EventDispatcher implements IEventDispatcherService
 {
@@ -13,9 +15,24 @@ class EventDispatcher implements IEventDispatcherService
    */
   private $eventDispatcher = null;
   
+  /**
+   * @var \Frosting\IService\Invoker\IInvokerService
+   */
+  private $invoker = null;
+  
   public function __construct()
   {
     $this->eventDispatcher = new ProxiedEventDispatcher();
+  }
+  
+  /**
+   * @param Frosting\IService\Invoker\IInvokerService
+   * 
+   * @Inject
+   */
+  public function setInvoker(IInvokerService $invoker) 
+  {
+    $this->invoker = $invoker;
   }
   
   public function addListener($eventName, $listener, $priority = 0) 
@@ -35,7 +52,7 @@ class EventDispatcher implements IEventDispatcherService
   private function doDispatch($listeners, IEvent $event) 
   {
     foreach ($listeners as $listener) {
-      call_user_func($listener, $event);
+      $this->invoker->invoke($listener,$event->getParameters(),array($event, $event->getSubject()));
       if ($event->isPropagationStopped()) {
         break;
       }
@@ -55,5 +72,18 @@ class EventDispatcher implements IEventDispatcherService
   public function removeListener($eventName, $listener) 
   {
     return $this->eventDispatcher->removeListener($eventName, $listener) ;  
+  }
+  
+  /**
+   * @param mixed $configuration
+   * @return IEventDispatcherService
+   */
+  public static function factory($configuration = null)
+  {
+    if(is_null($configuration)) {
+      $configuration = __DIR__ . '/frosting.json';
+    }
+    
+    return Frosting::serviceFactory($configuration,self::FROSTING_SERVICE_NAME);
   }
 }

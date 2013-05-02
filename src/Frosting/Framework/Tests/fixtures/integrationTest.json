@@ -1,0 +1,10 @@
+{
+  "imports": [
+    "../../frosting.json"
+  ],
+  "services": {
+    "serviceForTest": {
+      "class": "Frosting\\Framework\\Tests\\ServiceForTest"
+    }
+  }
+}

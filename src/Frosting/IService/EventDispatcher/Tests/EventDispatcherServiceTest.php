@@ -176,9 +176,9 @@ abstract class EventDispatcherServiceTest extends \PHPUnit_Framework_TestCase
     $this->dispatcher->removeListener('notExists', $this->listener);
   }
 
-  public function testEventReceivesTheDispatcherInstance() {
-    $test = $this;
-    $this->dispatcher->addListener('test', function ($event) use (&$dispatcher) {
+  public function testEventReceivesTheDispatcherInstance() 
+  {
+    $this->dispatcher->addListener('test', function (IEvent $event) use (&$dispatcher) {
               $dispatcher = $event->getDispatcher();
             });
     $this->dispatcher->dispatch('test');

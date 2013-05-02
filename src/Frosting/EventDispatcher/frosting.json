@@ -1,4 +1,7 @@
 {
+    "imports": [
+        "../Invoker/frosting.json"
+    ],
     "services": {
         "eventDispatcher": {
             "class": "Frosting\\EventDispatcher\\EventDispatcher"
