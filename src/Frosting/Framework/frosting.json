@@ -3,11 +3,7 @@
       "../EventDispatcher/frosting.json",
       "../ObjectFactory/frosting.json",
       "../Cache/frosting.json",
-      "../Invoker/frosting.json"
-    ],
-    "services": {
-        "serviceContainer": {
-            "class": "Frosting\\DependencyInjection\\ServiceContainer"
-        }
-    }
+      "../Invoker/frosting.json",
+      "../Configuration/frosting.json"
+    ]
 }

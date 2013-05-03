@@ -54,7 +54,7 @@ class Inject extends BaseInject implements IAspectLikeAnnotation
           if($serviceName == '$') {
             $parameters[$parameter->getPosition()] = 'isset($contextParameters["configuration"]) ? $contextParameters["configuration"] : null';
           } else {
-            $parameters[$parameter->getPosition()] = '$serviceContainer->getServiceConfiguration("' . $serviceName . '")';
+            $parameters[$parameter->getPosition()] = '$serviceContainer->getServiceByName("configuration")->get("' . substr($serviceName,1) . '")';
           }
           
           break;

@@ -75,7 +75,7 @@ abstract class ServiceContainerTest extends \PHPUnit_Framework_TestCase
   public function testGetServiceNames()
   {
     $serviceNames = $this->loadServiceContainer()->getServiceNames();
-    $this->assertEquals(array('test','tag','itag','injected'), $serviceNames);
+    $this->assertCount(0,array_diff(array('test','tag','itag','injected'), $serviceNames));
   }
   
   public function testGetServiceConfiguration()

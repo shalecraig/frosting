@@ -111,7 +111,7 @@ class CacheEngine implements ICacheService
     if(is_null($configuration)) {
       $configuration = __DIR__ . '/frosting.json';
     }
-    
+
     return Frosting::serviceFactory($configuration,self::FROSTING_SERVICE_NAME);
   }
 }

@@ -240,7 +240,7 @@ class ContainerGenerator
     
     return $this->services[$name];
     ');
-      
+
     $serviceNames = array();
     foreach($this->configuration as $serviceName => $configuration) {
       if(array_key_exists('disabled', $configuration) && $configuration['disabled']) {

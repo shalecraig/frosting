@@ -1,0 +1,14 @@
+{   
+    "imports": [
+        "../EventDispatcher/frosting.json"
+    ],
+    "services": {
+        "configuration": {
+            "class": "Frosting\\Configuration\\Configuration",
+            "configuration": {
+                "debug": true,
+                "generatedDirectory": <?php echo json_encode(sys_get_temp_dir() . DIRECTORY_SEPARATOR . '/frosting') ?>
+            }
+        }
+    }
+}

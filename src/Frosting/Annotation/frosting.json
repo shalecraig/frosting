@@ -1,0 +1,7 @@
+{   
+    "services": {
+        "annotationParser": {
+            "class": "Frosting\\Annotation\\AnnotationParser"
+        }
+    }
+}

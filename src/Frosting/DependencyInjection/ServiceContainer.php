@@ -8,6 +8,7 @@
 namespace Frosting\DependencyInjection;
 
 use Frosting\IService\DependencyInjection\IServiceContainer;
+use Frosting\Framework\Frosting;
 use Frosting\DependencyInjection\Generator\ContainerGenerator;
 
 /**
@@ -20,9 +21,64 @@ class ServiceContainer implements IServiceContainer
   /**
    * @var \Frosting\IService\DependencyInjection\IServiceContainer 
    */
-  private $generatedContainer = null;
+  public $generatedContainer = null;
   
-  protected function initiliaze() 
+  public function __construct(array $configuration = array())
+  {
+    $neededServices = array(
+      'annotationParser',
+      'objectFactory',
+      'configuration'
+    );
+    
+    $services = array('serviceContainer'=>$this);
+    
+    foreach($neededServices as $serviceName) {
+      if(!isset($configuration[$serviceName]['class'])) {
+        throw new \RuntimeException('The service named [' . $serviceName . '] is required for the service container');
+      }
+      $class = $configuration[$serviceName]['class'];
+      
+      if($serviceName !== constant($class . '::FROSTING_SERVICE_NAME')) {
+        throw new \RuntimeException('The class [' . $class . '] for service named [' . $serviceName . '] is not valid');
+      }
+
+      $services[$serviceName] = new $class();
+    }
+    
+    $services['annotationParser']->addNamespace("Frosting\DependencyInjection");
+    $services['annotationParser']->addNamespace("Frosting\Framework\EventDispatcher");
+
+    foreach($configuration as $serviceName => $serviceParameter) {
+      $serviceConfiguraton = isset($serviceParameter['configuration']) ? $serviceParameter['configuration'] : null;
+      $services['configuration']->merge(array($serviceName=>$serviceConfiguraton));
+    }
+
+    $generator = new ContainerGenerator($services['annotationParser'],$configuration);
+    $path = $services['configuration']->get("[configuration][generatedDirectory]");
+    $className = $generator->generate(
+      $path,
+      $services['configuration']->get("[configuration][debug]")
+    );
+    
+    require_once($path . '/' . $className . '.php');
+ 
+    $container = $services['serviceContainer'];
+    
+    $container->generatedContainer = new $className($services);
+    $container->generatedContainer->getServiceByName("objectFactory")
+      ->registerClassCreator(
+        new \Frosting\ObjectFactory\AnnotationClassCreator($services['annotationParser'])
+      );
+    //$container->generatedContainer->getServiceByName("objectFactory")->registerObjectBuilder(new InjecterObjectBuilder($container));
+    
+    $services['objectFactory']->setServiceContainer($container);
+    
+    $container->initialize();
+    return $container;
+  }
+  
+  private function initialize() 
   {
     $objectFactory = $this->generatedContainer->getServiceByName("objectFactory");
     foreach($this->getServicesByTag("objectFactory.builder") as $service) {
@@ -62,49 +118,16 @@ class ServiceContainer implements IServiceContainer
     return $this->generatedContainer->getServiceConfiguration($name);
   }
   
-  public static function factory($configuration)
+  /**
+   * @param mixed $configuration
+   * @return IObjectFactoryService
+   */
+  public static function factory(array $configuration = null)
   {
-    $neededServices = array(
-      'serviceContainer' => get_called_class(),
-      'annotationParser' => 'Frosting\Annotation\AnnotationParser',
-      'objectFactory' => 'Frosting\ObjectFactory\ObjectFactory'
-    );
-    
-    $services = array();
-    
-    foreach($neededServices as $serviceName => $instanceOf) {
-      if(isset($configuration[$serviceName]['class'])) {
-        $reflectionClass = new \ReflectionClass($configuration[$serviceName]['class']);
-        if($reflectionClass->isSubclassOf($instanceOf)) {
-          throw new \RuntimeException('The service named [' . $serviceName . '] must be a instance of [' . $instanceOf .']');
-        }
-        $services[$serviceName] = $reflectionClass->newInstance();
-      } else {
-        $services[$serviceName] = new $instanceOf();
-      }
+    if(is_null($configuration)) {
+      $configuration = __DIR__ . '/frosting.json';
     }
-    
-    $services['annotationParser']->addNamespace(__NAMESPACE__);
-    $services['annotationParser']->addNamespace("Frosting\Framework\EventDispatcher");
 
-    $generator = new ContainerGenerator($services['annotationParser'],$configuration);
-    $path = sys_get_temp_dir();
-    $className = $generator->generate($path, true);
-    
-    require_once($path . '/' . $className . '.php');
- 
-    $container = $services['serviceContainer'];
-    
-    $container->generatedContainer = new $className($services);
-    $container->generatedContainer->getServiceByName("objectFactory")
-      ->registerClassCreator(
-        new \Frosting\ObjectFactory\AnnotationClassCreator($services['annotationParser'])
-      );
-    //$container->generatedContainer->getServiceByName("objectFactory")->registerObjectBuilder(new InjecterObjectBuilder($container));
-    
-    $services['objectFactory']->setServiceContainer($container);
-    
-    $container->initiliaze();
-    return $container;
+    return Frosting::serviceFactory($configuration,"serviceContainer");
   }
 }

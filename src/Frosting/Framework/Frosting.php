@@ -7,8 +7,6 @@
 
 namespace Frosting\Framework;
 
-use \Frosting\DependencyInjection\ServiceContainer;
-
 /**
  * Description of Frosting
  *
@@ -24,15 +22,28 @@ class Frosting
   {
     $fileLoader = new ConfigurationFileLoader();
     $this->configuration = $fileLoader->load($configurationFile);
-    if(!array_key_exists('services', $this->configuration)) {
-      $this->configuration["services"] = array();
+
+    if(!isset($this->configuration['services']['serviceContainer'])) {
+      $this->configuration = $fileLoader->load(
+        array_merge(
+          array('imports'=>array(__DIR__ . '/../DependencyInjection/frosting.json')),
+          $this->configuration
+        )
+      );
     }
+
     $this->serviceContainer = $this->loadServiceContainer($this->configuration['services']);
   }
   
-  public function loadServiceContainer($configuration)
+  /**
+   * @param type $configuration
+   * 
+   * @return \Frosting\IService\DependencyInjection\IServiceContainer
+   */
+  protected function loadServiceContainer($configuration)
   {
-    return ServiceContainer::factory($configuration);
+    $class = $configuration['serviceContainer']['class'];
+    return new $class($configuration);
   }
   
   /**

@@ -21,17 +21,11 @@ class FileStorage implements ICacheStorage
   /**
    * @param array $config
    * 
-   * @Inject(configuration="$")
+   * @Inject(baseDir="$[configuration][generatedDirectory]")
    */
-  public function initialize($configuration = array())
+  public function initialize($baseDir)
   {
-    if(is_null($configuration)) {
-      $configuration = array();
-    }
-    if (!isset($configuration['baseDir'])) {
-      $configuration['baseDir'] = sys_get_temp_dir();
-    }
-    $this->baseDir = $configuration['baseDir'];
+    $this->baseDir = $baseDir . '/cache';
   }
   
   /**

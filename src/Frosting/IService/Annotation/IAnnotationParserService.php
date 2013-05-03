@@ -14,6 +14,11 @@ namespace Frosting\IService\Annotation;
 interface IAnnotationParserService
 {
   /**
+   * The service name use as a reference
+   */
+  const FROSTING_SERVICE_NAME = "annotationParser";
+  
+  /**
    * 
    * @param type $className
    * 

@@ -9,6 +9,6 @@ class ServiceContainerTest extends BaseServiceContainerTest
 {
   protected function getServiceContainer($configuration) 
   {
-    return ServiceContainer::factory($configuration);
+    return ServiceContainer::factory(array('services'=>$configuration));
   }
 }

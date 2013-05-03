@@ -42,9 +42,10 @@ class ObjectFactory implements IObjectFactoryService
   public function setServiceContainer(IServiceContainer $serviceContainer)
   {
     spl_autoload_register(array($this,'autoload'), true, true);
+    $configuration = $serviceContainer->getServiceByName('configuration');
     $this->serviceContainer = $serviceContainer;
-    $this->generationPath = sys_get_temp_dir();
-    $this->debug = true;
+    $this->generationPath = $configuration->get('[configuration][generatedDirectory]');
+    $this->debug = (bool)$configuration->get('[configuration][debug]');
   }
   
   public function autoload($class)
