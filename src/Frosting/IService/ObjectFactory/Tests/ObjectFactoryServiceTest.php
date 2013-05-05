@@ -20,7 +20,7 @@ abstract class ObjectFactoryServiceTest extends \PHPUnit_Framework_TestCase
   /**
    * @return \Frosting\IService\ObjectFactory\IObjectFactoryService
    */
-  private function loadObjectFactory()
+  protected function loadObjectFactory()
   {
     if(is_null($this->objectFactory)) {
       $this->objectFactory = $this->getObjectFactory();

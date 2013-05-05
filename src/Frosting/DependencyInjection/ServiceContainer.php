@@ -48,6 +48,7 @@ class ServiceContainer implements IServiceContainer
     
     $services['annotationParser']->addNamespace("Frosting\DependencyInjection");
     $services['annotationParser']->addNamespace("Frosting\Framework\EventDispatcher");
+    $services['annotationParser']->addNamespace("Frosting\ObjectFactory");
 
     foreach($configuration as $serviceName => $serviceParameter) {
       $serviceConfiguraton = isset($serviceParameter['configuration']) ? $serviceParameter['configuration'] : null;

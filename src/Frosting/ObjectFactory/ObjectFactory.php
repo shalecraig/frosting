@@ -139,7 +139,16 @@ class ObjectFactory implements IObjectFactoryService
     class_exists($class,true);
 
     $reflectionClass = new \ReflectionClass($class);
-    $object = $reflectionClass->newInstanceArgs($constructorArguments);
+    if($reflectionClass->hasMethod('__selfFactory')) {
+      $parameters = array_merge(array(null),$constructorArguments);
+      $object = call_user_func_array(
+        array($reflectionClass->getMethod('__selfFactory'),'invoke'),
+        $parameters
+      );
+    } else {
+      $object = $reflectionClass->newInstanceArgs($constructorArguments);
+    }
+    
     foreach($this->builders as $builder) {
       $builder->initializeObject($object, $contextParameters);
     }
