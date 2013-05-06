@@ -45,7 +45,6 @@ class RouterTest extends \PHPUnit_Framework_TestCase
   
   /**
    * @dataProvider providerMatchRoute
-   * 
    */
   public function testRoute($pathinfo, $expected, $name, $path, array $defaults = array(), array $requirements = array(), array $options = array(), $host = '', $schemes = array(), $methods = array())
   {

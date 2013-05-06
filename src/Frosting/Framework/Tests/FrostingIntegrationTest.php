@@ -39,6 +39,21 @@ class FrostingIntegrationTest extends \PHPUnit_Framework_TestCase
     $this->assertEquals(10,$serviceForTest->defaultValue);
     $this->assertEquals($parameter, $serviceForTest->namedParameter);
   }
+  
+  public function testRouteConnection()
+  {
+    $serviceContainer = $this->frosting->getServiceContainer();
+    $serviceRouter = $serviceContainer->getServiceByName('routing');
+    $result = $serviceRouter->match('/test');
+    $this->assertEquals(
+      array(
+        'test'=>0,
+        '_service'=>array('name'=>'serviceForTest','method'=>'route'),
+        '_route'=>'test'
+      ), 
+      $result
+    );
+  }
 }
 
 class ServiceForTest
@@ -62,6 +77,13 @@ class ServiceForTest
     foreach(get_defined_vars() as $key => $value) {
       $this->{$key} = $value;
     }
+  }
+  
+  /**
+   * @Route(name="test",path="/test",defaults={"test" = 0})
+   */
+  public function route()
+  {
   }
 }
 
