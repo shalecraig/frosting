@@ -1,0 +1,7 @@
+{
+    "services": {
+        "routing": {
+            "class": "Frosting\\Routing\\Router"
+        }
+    }
+}
