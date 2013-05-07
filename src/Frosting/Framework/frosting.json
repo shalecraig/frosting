@@ -5,6 +5,7 @@
       "../Cache/frosting.json",
       "../Invoker/frosting.json",
       "../Configuration/frosting.json",
-      "../Routing/frosting.json"
+      "../Routing/frosting.json",
+      "../View/frosting.json"
     ]
 }

@@ -1,0 +1,10 @@
+{
+    "services": {
+        "viewRenderer": {
+            "class": "Frosting\\View\\CompositeRenderer"
+        },
+        "viewRenderer.php": {
+            "class": "Frosting\\View\\PhpRenderer"
+        }
+    }
+}
