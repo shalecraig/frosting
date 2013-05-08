@@ -18,7 +18,7 @@ use Frosting\Framework\Frosting;
 class CompositeRenderer implements IViewRendererService
 {
   /**
-   * @var \Frosting\IService\View\IRenderer[] 
+   * @var \Frosting\IService\View\IViewRendererService[] 
    */
   private $renderers = array();
   
@@ -39,8 +39,19 @@ class CompositeRenderer implements IViewRendererService
     }
   }
   
+  public function canRender($file) 
+  {
+    foreach($this->renderers as $renderer) {
+      if($renderer->canRender($file)) {
+        return true;
+      }
+    }
+    
+    return false;
+  }
+  
   /**
-   * @param type $renderers
+   * @param \Frosting\IService\View\IViewRendererService[] $renderers
    * 
    * @Inject(renderers="@viewRenderer")
    */

@@ -62,6 +62,23 @@ class TwigRenderer implements IViewRendererService
   
   public function render($file, array $parameters = array()) 
   {
-    return $this->getTwig()->render($file . '.twig', $parameters);
+    return $this->getTwig()->render($this->getFilename($file), $parameters);
+  }
+  
+  public function canRender($file) 
+  {
+    return $this->getFilename($file) !== null;
+  }
+  
+  private function getFilename($file) {
+    if (file_exists($file)) {
+      return $file;
+    }
+    $file .= '.twig';
+    if (file_exists($file)) {
+      return $file;
+    }
+    
+    return null;
   }
 }

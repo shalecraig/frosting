@@ -17,10 +17,24 @@ namespace Frosting\IService\View;
 interface IViewRendererService 
 {
   /**
+   * The service name use as a reference
+   */
+  const FROSTING_SERVICE_NAME = 'viewRenderer';
+  
+  /**
    * @param type $file
    * @param array $parameters
    * 
    * @return string
    */
   public function render($file,array $parameters = array());
+  
+  /**
+   * Check if the render is able to render this specific file
+   * 
+   * @param string $file
+   * 
+   * @return boolean
+   */
+  public function canRender($file);
 }

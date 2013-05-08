@@ -23,11 +23,28 @@ class PhpRenderer implements IViewRendererService
     ob_start();
 
     try {
-      include $file;
+      include $this->getFilename($file);
     } catch (Exception $e) {
       ob_end_clean();
       throw $e;
     }
     return ob_get_clean();
+  }
+  
+  public function canRender($file) 
+  {
+    return $this->getFilename($file) !== null;
+  }
+  
+  private function getFilename($file) {
+    if (file_exists($file)) {
+      return $file;
+    }
+    $file .= '.php';
+    if (file_exists($file)) {
+      return $file;
+    }
+    
+    return null;
   }
 }
