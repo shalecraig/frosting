@@ -53,6 +53,8 @@ class FrostingIntegrationTest extends \PHPUnit_Framework_TestCase
       ), 
       $result
     );
+    
+    $serviceContainer->getServiceByName("viewRenderer");
   }
 }
 

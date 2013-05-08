@@ -5,6 +5,9 @@
         },
         "viewRenderer.php": {
             "class": "Frosting\\View\\PhpRenderer"
-        }
+        },
+        "viewRenderer.twig": {
+            "class": "Frosting\\View\\TwigRenderer"
+        }     
     }
 }

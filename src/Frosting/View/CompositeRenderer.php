@@ -41,10 +41,22 @@ class CompositeRenderer implements IViewRendererService
   
   /**
    * @param type $renderers
+   * 
+   * @Inject(renderers="@viewRenderer")
    */
   public function setRenderers($renderers)
   {
-    $this->renderers = array_diff($renderers,array($this));
+    $currentObject = $this;
+    //We remove the current object since it is tag and we don't want
+    //a infinite loop on the method that iterrate trough the renderers
+    $this->renderers = array_values(
+      array_filter(
+        $renderers,
+        function($renderer) use ($currentObject) {
+          return $renderer != $currentObject;
+        }
+      )
+    );
   }
   
   /**

@@ -67,11 +67,14 @@ class ServiceContainer implements IServiceContainer
     $container = $services['serviceContainer'];
     
     $container->generatedContainer = new $className($services);
-    $container->generatedContainer->getServiceByName("objectFactory")
-      ->registerClassCreator(
-        new \Frosting\ObjectFactory\AnnotationClassCreator($services['annotationParser'])
-      );
-    //$container->generatedContainer->getServiceByName("objectFactory")->registerObjectBuilder(new InjecterObjectBuilder($container));
+    $objectFactory = $container->generatedContainer->getServiceByName("objectFactory");
+    $objectFactory->registerClassCreator(
+      new \Frosting\ObjectFactory\AnnotationClassCreator($services['annotationParser'])
+    );
+    
+    $objectFactory->registerObjectBuilder(
+      new ServiceContainerReferenceObjectBuilder($this->generatedContainer)
+    );
     
     $services['objectFactory']->setServiceContainer($container);
     
