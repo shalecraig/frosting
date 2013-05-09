@@ -7,7 +7,6 @@
 
 namespace Frosting\View;
 
-use Frosting\IService\View\IViewRendererService;
 use Twig_Loader_Filesystem;
 use Twig_Environment;
 
@@ -16,7 +15,7 @@ use Twig_Environment;
  *
  * @author Martin
  */
-class TwigRenderer implements IViewRendererService
+class TwigRenderer extends BaseExtensionRenderer
 {
   /**
    * @var Twig_Environment 
@@ -32,6 +31,11 @@ class TwigRenderer implements IViewRendererService
    * @var string 
    */
   private $cacheDirectory = null;
+  
+  public function __construct() 
+  {
+    $this->setExtensions(array('twig'));
+  }
   
   /**
    * 
@@ -62,23 +66,6 @@ class TwigRenderer implements IViewRendererService
   
   public function render($file, array $parameters = array()) 
   {
-    return $this->getTwig()->render($this->getFilename($file), $parameters);
-  }
-  
-  public function canRender($file) 
-  {
-    return $this->getFilename($file) !== null;
-  }
-  
-  private function getFilename($file) {
-    if (file_exists($file)) {
-      return $file;
-    }
-    $file .= '.twig';
-    if (file_exists($file)) {
-      return $file;
-    }
-    
-    return null;
+    return $this->getTwig()->render($file, $parameters);
   }
 }

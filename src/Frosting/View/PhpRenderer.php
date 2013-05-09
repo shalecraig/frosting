@@ -7,15 +7,18 @@
 
 namespace Frosting\View;
 
-use \Frosting\IService\View\IViewRendererService;
-
 /**
  * Description of PhpRenderer
  *
  * @author Martin
  */
-class PhpRenderer implements IViewRendererService 
+class PhpRenderer extends BaseExtensionRenderer
 {
+  public function __construct() 
+  {
+    $this->setExtensions(array('php'));
+  }
+  
   public function render($file, array $parameters = array()) 
   {
     extract($parameters);
@@ -23,28 +26,11 @@ class PhpRenderer implements IViewRendererService
     ob_start();
 
     try {
-      include $this->getFilename($file);
+      include $file;
     } catch (Exception $e) {
       ob_end_clean();
       throw $e;
     }
     return ob_get_clean();
-  }
-  
-  public function canRender($file) 
-  {
-    return $this->getFilename($file) !== null;
-  }
-  
-  private function getFilename($file) {
-    if (file_exists($file)) {
-      return $file;
-    }
-    $file .= '.php';
-    if (file_exists($file)) {
-      return $file;
-    }
-    
-    return null;
   }
 }

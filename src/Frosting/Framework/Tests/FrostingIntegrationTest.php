@@ -56,6 +56,16 @@ class FrostingIntegrationTest extends \PHPUnit_Framework_TestCase
     
     $serviceContainer->getServiceByName("viewRenderer");
   }
+  
+  public function testLoadServices()
+  {
+    $serviceContainer = $this->frosting->getServiceContainer();
+    foreach($serviceContainer->getServiceNames() as $name) {
+      $serviceContainer->getServiceByName($name);
+    }
+    //If we reach that point this mean that no exception have been triggered
+    $this->assertTrue(true);
+  }
 }
 
 class ServiceForTest
