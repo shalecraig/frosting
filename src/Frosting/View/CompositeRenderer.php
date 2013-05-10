@@ -70,6 +70,16 @@ class CompositeRenderer implements IViewRendererService
     );
   }
   
+  public function getExtensions() 
+  {
+    $extensions = array();
+    foreach($this->renderers as $renderer) {
+      $extensions = array_merge($extensions, $renderer->getExtensions());
+    }
+    
+    return array_values(array_unique($extensions));
+  }
+  
   /**
    * @param mixed $configuration
    * @return IViewRenderer

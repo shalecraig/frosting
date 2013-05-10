@@ -7,8 +7,10 @@
 
 namespace Frosting\View;
 
-use Twig_Loader_Array;;
+use Twig_Loader_Array;
+use Twig_Loader_Chain;
 use Twig_Environment;
+use Twig_Loader_Filesystem;
 
 /**
  * Description of TwigRenderer
@@ -26,6 +28,12 @@ class TwigRenderer extends BaseExtensionRenderer
    * @var string 
    */
   private $cacheDirectory = null;
+  
+  /**
+   *
+   * @var Twig_Loader_Array
+   */
+  private $arrayLoader = null;
   
   public function __construct() 
   {
@@ -49,8 +57,14 @@ class TwigRenderer extends BaseExtensionRenderer
    */
   private function getTwig() {
     if (is_null($this->twig)) {
-      $this->twig = new Twig_Environment(new Twig_Loader_Array(array()), array(
-          'cache' => $this->cacheDirectory,
+      $loader = new Twig_Loader_Chain();
+      $this->arrayLoader = new Twig_Loader_Array(array());
+      $loader->addLoader($this->arrayLoader);
+      $loader->addLoader(
+        new Twig_Loader_Filesystem($this->getFileSystemLoader()->getPaths())
+      );
+      $this->twig = new Twig_Environment($loader , array(
+        'cache' => $this->cacheDirectory,
       ));
     }
 
@@ -60,10 +74,9 @@ class TwigRenderer extends BaseExtensionRenderer
   public function render($file, array $parameters = array()) 
   {
     $twig = $this->getTwig();
-    $twig->getLoader()->setTemplate(
-      $file, 
-      file_get_contents($this->getFileSystemLoader()->getFullPath($file))
-    );
+    if(file_exists($file)) {
+      $this->arrayLoader->setTemplate($file, file_get_contents($file));
+    }
     return $twig->render($file, $parameters);
   }
 }

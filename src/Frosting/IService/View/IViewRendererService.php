@@ -37,4 +37,9 @@ interface IViewRendererService
    * @return boolean
    */
   public function canRender($file);
+  
+  /**
+   * @return array
+   */
+  public function getExtensions();
 }

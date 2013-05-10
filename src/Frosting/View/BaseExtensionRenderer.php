@@ -46,6 +46,11 @@ abstract class BaseExtensionRenderer implements IViewRendererService
     $this->extensions = array_map('strtolower', $extensions);
   }
   
+  public function getExtensions() 
+  {
+    return $this->extensions;
+  }
+  
   public function canRender($file) 
   {
     $extension = pathinfo($file, PATHINFO_EXTENSION);
