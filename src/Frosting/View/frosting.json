@@ -3,11 +3,15 @@
         "viewRenderer": {
             "class": "Frosting\\View\\CompositeRenderer"
         },
+        "viewFileLoader": {
+            "class": "Frosting\\View\\FileSystemLoader",
+            "configuration": []
+        },
         "viewRenderer.php": {
             "class": "Frosting\\View\\PhpRenderer"
         },
         "viewRenderer.twig": {
             "class": "Frosting\\View\\TwigRenderer"
-        }     
+        }
     }
 }

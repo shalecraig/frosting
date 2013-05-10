@@ -18,6 +18,29 @@ abstract class BaseExtensionRenderer implements IViewRendererService
 {
   private $extensions;
   
+  /**
+   * @var \Frosting\View\FileSystemLoader
+   */
+  private $fileLoader;
+  
+  /**
+   * @param \Frosting\View\FileSystemLoader $loader
+   * 
+   * @Inject
+   */
+  public function setFileLoader(FileSystemLoader $viewFileLoader)
+  {
+    $this->fileLoader = $viewFileLoader;
+  }
+  
+  /**
+   * @return \Frosting\View\FileSystemLoader
+   */
+  public function getFileSystemLoader()
+  {
+    return $this->fileLoader;
+  }
+  
   protected function setExtensions($extensions)
   {
     $this->extensions = array_map('strtolower', $extensions);
@@ -25,11 +48,11 @@ abstract class BaseExtensionRenderer implements IViewRendererService
   
   public function canRender($file) 
   {
-    $pathinfo = pathinfo($file, PATHINFO_EXTENSION);
-    if(!isset($pathinfo['extension'])) {
+    $extension = pathinfo($file, PATHINFO_EXTENSION);
+    if(!$extension) {
       return false;
     }
-    
-    return in_array(strtolower($pathinfo['extensions']), $this->extensions);
+
+    return in_array(strtolower($extension), $this->extensions) && $this->fileLoader->exists($file);
   }
 }

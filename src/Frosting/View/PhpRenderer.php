@@ -21,12 +21,13 @@ class PhpRenderer extends BaseExtensionRenderer
   
   public function render($file, array $parameters = array()) 
   {
+    
     extract($parameters);
 
     ob_start();
 
     try {
-      include $file;
+      include $this->getFileSystemLoader()->getFullPath($file);
     } catch (Exception $e) {
       ob_end_clean();
       throw $e;
