@@ -1,0 +1,17 @@
+{
+    "services": {
+        "assetManager": {
+            "class": "Frosting\\AssetManager\\Manager",
+            "configuration": {
+                "rootDirectory": null,
+                "aggregation": false
+            }
+        },
+        "assetManagerTwigExtension": {
+            "class": "Frosting\\AssetManager\\Twig\\AssetManagerExtension"
+        },
+        "assetManagerFilerPersister": {
+            "class": "Frosting\\AssetManager\\FilePersister"
+        }
+    }
+}

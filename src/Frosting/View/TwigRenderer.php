@@ -25,6 +25,18 @@ class TwigRenderer extends BaseExtensionRenderer
   private $twig = null;
   
   /**
+   *
+   * @var \Twig_Extension[] 
+   */
+  private $twigExtensions = array();
+	
+	/**
+	 *
+	 * @var boolean 
+	 */
+	private $debug = false;
+  
+  /**
    * @var string 
    */
   private $cacheDirectory = null;
@@ -45,17 +57,22 @@ class TwigRenderer extends BaseExtensionRenderer
    * @param string $cacheDirectory
    * @param string $viewDirectory
    * 
-   * @Inject(cacheDirectory="$[configuration][generatedDirectory]")
+   * @Inject(
+	 *   cacheDirectory="$[configuration][generatedDirectory]",
+	 *   debug="$[configuration][debug]"
+	 * )
    */
-  public function initialize($cacheDirectory)
+  public function initialize($cacheDirectory,$debug)
   {
-    $this->cacheDirectory = $cacheDirectory;
+    $this->cacheDirectory = $cacheDirectory . '/twig';
+		$this->debug = $debug;
   }
   
   /**
    * @return Twig_Environment
    */
-  private function getTwig() {
+  private function getTwig() 
+  {
     if (is_null($this->twig)) {
       $loader = new Twig_Loader_Chain();
       $this->arrayLoader = new Twig_Loader_Array(array());
@@ -65,16 +82,39 @@ class TwigRenderer extends BaseExtensionRenderer
       );
       $this->twig = new Twig_Environment($loader , array(
         'cache' => $this->cacheDirectory,
+				'debug' => $this->debug,
       ));
+			
+      foreach($this->twigExtensions as $extension) {
+        $this->twig->addExtension($extension);
+      }
+			
+			$this->twig->registerUndefinedFunctionCallback(function ($name) {
+					if (function_exists($name)) {
+							return new \Twig_Function_Function($name);
+					}
+
+					return false;
+			});
     }
 
     return $this->twig;
+  }
+  
+  /**
+   * @Inject(extensions="@twigRenderer.twigExtension")
+   * @param array $extensions
+   */
+  public function setTwigExtensions(array $extensions)
+  {
+    $this->twigExtensions = $extensions;
   }
   
   public function render($file, array $parameters = array()) 
   {
     $twig = $this->getTwig();
     if(file_exists($file)) {
+
       $this->arrayLoader->setTemplate($file, file_get_contents($file));
     }
     return $twig->render($file, $parameters);
