@@ -17,7 +17,7 @@ use Frosting\AssetManager;
  * 
  * @Tag("twigRenderer.twigExtension")
  */
-class AssetMAnagerExtension extends Twig_Extension
+class AssetManagerExtension extends Twig_Extension
 {
   /**
    * @var \Frosting\AssetManager\Manager
