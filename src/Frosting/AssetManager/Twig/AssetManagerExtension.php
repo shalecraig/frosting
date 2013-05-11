@@ -8,7 +8,7 @@
 namespace Frosting\AssetManager\Twig;
 
 use Twig_Extension;
-use Frosting\AssetManager;
+use Frosting\AssetManager\Manager;
 
 /**
  * Description of TwigExtension
@@ -29,7 +29,7 @@ class AssetManagerExtension extends Twig_Extension
    * 
    * @Inject
    */
-  public function setAssetManager(AssetManager $assetManager)
+  public function setAssetManager(Manager $assetManager)
   {
     $this->assetManager = $assetManager;
   }
