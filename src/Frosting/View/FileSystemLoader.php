@@ -57,7 +57,7 @@ class FileSystemLoader
   
   public function exists($fileName)
   {
-    return $this->twigFileSystemLoader->exists($fileName);
+    return file_exists($fileName) || $this->twigFileSystemLoader->exists($fileName);
   }
   
   public function getFullPath($fileName)

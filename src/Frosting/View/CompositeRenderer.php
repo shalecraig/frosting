@@ -31,10 +31,8 @@ class CompositeRenderer implements IViewRendererService
   public function render($file, array $parameters = array())
   {
     foreach($this->renderers as $renderer) {
-      try {
+      if($renderer->canRender($file)) {
         return $renderer->render($file, $parameters);
-      } catch (\Exception $e) {
-        
       }
     }
   }
