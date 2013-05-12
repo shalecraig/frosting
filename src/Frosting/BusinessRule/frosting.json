@@ -5,7 +5,8 @@
     ],
     "services": {
         "businessRuleEnforcer": {
-            "class": "Frosting\\BusinessRule\\BusinessRuleEngine"
+            "class": "Frosting\\BusinessRule\\BusinessRuleEngine",
+            "configuration": []
         },
         "yamlParser": {
             "class": "Symfony\\Component\\Yaml\\Yaml"

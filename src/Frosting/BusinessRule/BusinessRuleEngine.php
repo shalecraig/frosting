@@ -23,9 +23,9 @@ class BusinessRuleEngine
 {
   private $rulesObject = array();
   
-  private $rulesClass = array();
+  private $rules = array();
   
-  private $defaultRule = array();
+  private $defaultRules = array();
   
   /**
    * @var \Symfony\Component\Yaml\Yaml
@@ -60,14 +60,31 @@ class BusinessRuleEngine
     $this->yamlParser = $yamlParser;
   }
   
+  /**
+   * 
+   * @param array $configuration
+   * 
+   * @Inject(configuration="$")
+   */
+  public function setConfiguration(array $configuration)
+  {
+    if(isset($configuration['rules'])) {
+      $this->rules = $configuration['rules'];
+    }
+    
+    if(isset($configuration['defaultRules'])) {
+      $this->defaultRules = $configuration['defaultRules'];
+    }
+  }
+  
   public function setRule($rule, $class)
   {
-    $this->rulesClass[$rule] = $class;
+    $this->rules[$rule] = $class;
   }
   
   public function setDefaultRule($context, $ruleName, $parameterName)
   {
-    $this->defaultRule[$context] = array(
+    $this->defaultRules[$context] = array(
       'rule'=>$ruleName,
       'parameter'=>$parameterName
     );
@@ -118,7 +135,7 @@ class BusinessRuleEngine
     
     if(is_null($ruleContext)) {
       $ruleContext = $context;
-      if(!isset($this->rulesClass[$ruleContext . '\\' . $ruleName])) {
+      if(!isset($this->rules[$ruleContext . '\\' . $ruleName])) {
         $defaultRuleConfiguration = $this->getDefaultRuleName($context);
         if($defaultRuleConfiguration['parameter']) {
           $parameters[$defaultRuleConfiguration['parameter']] = $ruleName;
@@ -128,7 +145,7 @@ class BusinessRuleEngine
     }
     
     if(!isset($this->rulesObject[$ruleContext . '\\' . $ruleName])) {
-      $class = $this->rulesClass[$ruleContext . '\\' . $ruleName];
+      $class = $this->rules[$ruleContext . '\\' . $ruleName];
       $this->rulesObject[$ruleContext . '\\' . $ruleName] = $this->objectFactory->createObject($class);
     }
     
@@ -137,8 +154,8 @@ class BusinessRuleEngine
   
   private function getDefaultRuleName($context)
   {
-    if(array_key_exists($context, $this->defaultRule)) {
-      return $this->defaultRule[$context];
+    if(array_key_exists($context, $this->defaultRules)) {
+      return $this->defaultRules[$context];
     }
     
     return array('rule'=>null,'parameter'=>null);

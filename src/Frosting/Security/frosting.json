@@ -1,0 +1,23 @@
+{
+    "imports": [
+        "../BusinessRule/frosting.json"
+    ],
+    "services": {
+        "accessControl": {
+            "class": "Frosting\\Security\\AccessControlManager"
+        },
+        "accessControlerUser": {
+            "class": "Frosting\\Security\\SessionAccessControlUser"
+        },
+        "businessRuleEnforcer": {
+            "configuration": {
+                "defaultRules": {
+                    "security": { "rule": "hasPermission", "parameter":"permission" }
+                },
+                "rules": {
+                    "security\\hasPermission": "Frosting\\Security\\CheckPermissionRule"
+                }
+            }
+        }
+    }
+}
