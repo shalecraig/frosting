@@ -9,6 +9,7 @@ use Assetic\Asset\FileAsset;
 use Assetic\Filter\ScssphpFilter;
 use Frosting\Framework\Frosting;
 use Assetic\Asset\AssetCollection;
+use Assetic\Filter\CssRewriteFilter;
 
 /**
  * Description of Manager
@@ -59,10 +60,10 @@ class Manager
     
     $filePath = $asset->getSourcePath();
     if(!$filePath) {
-      $filePath = '/aggregation.'.$fileType;
+      $filePath = '/aggregation.';
     }
     
-    $targetPath = '/frosting/asset'.$filePath;
+    $targetPath = 'frosting/asset'.$filePath. '.' . $key . '.' . $fileType;
     
     if(!$this->filePersister->exists($targetPath)) {
       $asset->setTargetPath($targetPath);
@@ -71,12 +72,11 @@ class Manager
       $this->filePersister->persist($targetPath,$asset->dump());
     }
     
-    return $targetPath.'?k='.$key.'.'.$fileType;
+    return '/' . $targetPath;
   }
   
   private function applyFilters(AssetInterface $asset, $fileType)
   {
-    return;
     if($fileType == 'css') {
       $asset->ensureFilter(new CssRewriteFilter()); //NECESSARY FOR IMAGE PATHS
     }
@@ -167,7 +167,7 @@ class Manager
     $tags = array();
    
     foreach($cssFiles as $file) {
-      $tags[] = '<link rel="stylesheet" href="' . $this->getUrl($file,'css') . '" />';
+      $tags[] = '<link rel="stylesheet" href="' . $this->getUrl($file,'css') . '" type="text/css" />';
     }
     
     foreach($jsFiles as $file) {

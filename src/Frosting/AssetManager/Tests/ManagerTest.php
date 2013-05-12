@@ -21,10 +21,11 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
       )
     );
 
-    $assetManager->getHtmTags(array('/css/test.scss'));
+    $tag = $assetManager->getHtmTags(array('/css/test.scss'));
+    $simpleXml = new \SimpleXMLElement($tag[0]);
     $expected = "table.hl td.ln {
   text-align: right; }
 ";
-    $this->assertEquals($expected, $assetManager->getContent('/frosting/asset/css/test.scss'));
+    $this->assertEquals($expected, $assetManager->getContent((string)$simpleXml['href']));
   }
 }

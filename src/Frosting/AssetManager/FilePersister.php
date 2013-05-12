@@ -26,11 +26,14 @@ class FilePersister
     $this->rootDirectory = $directory;
   }
   
-  public function persist($path, $content)
+  public function persist($filePath, $content)
   {
-    $dir = dirname($path);
-    mkdir($this->rootDirectory . $dir, 0777, true);
-    file_put_contents($this->rootDirectory . $path, $content);
+    $dir = dirname($filePath);
+    $path = $this->rootDirectory . '/' . $dir;
+    if(!is_dir($path)) {
+      mkdir($path, 0777, true);
+    }
+    file_put_contents($this->rootDirectory . '/' . $filePath, $content);
     return true;
   }
   

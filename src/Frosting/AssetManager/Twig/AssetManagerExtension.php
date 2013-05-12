@@ -36,7 +36,11 @@ class AssetManagerExtension extends Twig_Extension
   
   public function getFunctions() {
     return array(
-        new \Twig_SimpleFunction('frosting_asset',array($this,'getHtmlTags'))
+        new \Twig_SimpleFunction(
+					'frosting_asset',
+					array($this,'getHtmlTags'),
+				  array('is_safe' => array('html'))
+				)
     );
   }
   
