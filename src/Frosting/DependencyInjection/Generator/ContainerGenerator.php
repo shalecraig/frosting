@@ -150,7 +150,6 @@ class ContainerGenerator
               )
           );
           \$this->services['" . $serviceName . "'] = \$service;
- //       \$this->getServiceByName('objectFactory')->initializeObject(\$service);
         ";
         $this->currentParsingResult = $this->annotationParser->parse($serviceConfiguration['class']);
 

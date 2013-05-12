@@ -28,8 +28,9 @@ class PhpRendererTest extends \PHPUnit_Framework_TestCase
   public function testCanRender()
   {
     $this->assertTrue($this->renderer->canRender('/fixtures/toRender.php'));
+    $this->assertTrue($this->renderer->canRender('/fixtures/toRender'));
     $this->assertFalse($this->renderer->canRender('notexistingFile.php'));
-    $this->assertFalse($this->renderer->canRender('PhpRendererTest'));
+    $this->assertFalse($this->renderer->canRender('/fixtures/toRender.badExtension'));
   }
   
   public function testRender()

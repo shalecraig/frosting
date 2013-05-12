@@ -1,0 +1,36 @@
+html {
+  height: 100%; }
+
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font: 13px Helmet, Freesans, sans-serif;
+  background : #000 url("../../../../../../asset/frostingDashboard/images/lines.jpg");
+  text-shadow: #444 0px 1px 1px;
+  color : #575757; }
+
+h2, h3, h4 {
+  color : #ddd;
+  line-height : 28px;
+  text-shadow : 0 1px 1px #000;
+  margin : 10px auto; }
+
+h2, h3 {
+  border-bottom : 1px solid #aaa; }
+  h2 [class^="icon-"], h3 [class^="icon-"], h2 [class*=" icon-"], h3 [class*=" icon-"] {
+    width: 20px;
+    height: 28px;
+    line-height: 28px; }
+
+h3 [class^="icon-"], h3 [class*=" icon-"] {
+  height : 23px;
+  line-height: 23px; }
+
+h3 {
+  line-height : 22px;
+  margin-top : 0px; }
+
+h4 {
+  line-height : 14px;
+  margin : 10px 0 0 0; }

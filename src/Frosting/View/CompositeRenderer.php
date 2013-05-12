@@ -30,9 +30,23 @@ class CompositeRenderer implements IViewRendererService
    */
   public function render($file, array $parameters = array())
   {
+    $ext = pathinfo($file, PATHINFO_EXTENSION);
+    if($ext == null) {
+      return $this->autoRender($file, $parameters);
+    }
     foreach($this->renderers as $renderer) {
       if($renderer->canRender($file)) {
         return $renderer->render($file, $parameters);
+      }
+    }
+  }
+  
+  private function autoRender($file, array $parameters = array())
+  {
+    foreach($this->getExtensions() as $ext) {
+      $result = $this->render($file . '.' . $ext, $parameters);
+      if($result) {
+        return $result;
       }
     }
   }

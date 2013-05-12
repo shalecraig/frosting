@@ -12,6 +12,7 @@ use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
 use Frosting\Framework\Frosting;
+use Symfony\Component\Routing\Generator\UrlGenerator;
 
 /**
  * Description of Router
@@ -35,11 +36,17 @@ class Router
    */
   private $urlMatcher;
   
+  /**
+   * @var UrlGenerator
+   */
+  private $urlGenerator;
+  
   public function __construct() 
   {
     $this->routeCollection = new RouteCollection();
     $this->context = new RequestContext();
     $this->urlMatcher = new UrlMatcher($this->routeCollection, $this->context);
+    $this->urlGenerator = new UrlGenerator($this->routeCollection, $this->context);
   }
   
   public function addRoute($name, $path, array $defaults = array(), array $requirements = array(), array $options = array(), $host = '', $schemes = array(), $methods = array())
@@ -58,9 +65,9 @@ class Router
     return $this->urlMatcher->match($pathinfo);
   }
   
-  public function generate()
+  public function generate($name, array $parameters = array())
   {
-    
+    return $this->urlGenerator->generate($name, $parameters);
   }
   
   /**

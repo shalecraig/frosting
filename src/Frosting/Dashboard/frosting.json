@@ -1,0 +1,19 @@
+{
+    "services": {
+        "frostingDashboard": {
+            "class": "Frosting\\Dashboard\\Dashboard"
+        },
+        "viewFileLoader": {
+            "configuration": {
+                "paths": ["<?php echo str_replace('\\','/',__DIR__) . '/resources/views' ?>"]
+            }
+        },
+        "assetManager": {
+            "configuration": {
+                "copyAssets": {
+                    "<?php echo str_replace('\\','/',__DIR__) . '/resources/views/web' ?>": "/asset/frostingDashboard"
+                }
+            }
+        }
+    }
+}

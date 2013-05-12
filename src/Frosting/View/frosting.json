@@ -12,6 +12,9 @@
         },
         "viewRenderer.twig": {
             "class": "Frosting\\View\\TwigRenderer"
+        },
+        "viewRendererReponseAdapter": {
+            "class": "Frosting\\View\\HtmlResponseAdapter"
         }
     }
 }

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>{% block title %}Welcome to Frosting Dashboard!{% endblock %}</title>
+        {% block stylesheets %}
+          {{ frosting_asset('/asset/frostingDashboard/css/style.scss') }}
+        {% endblock %}
+        {% block javascripts %}
+          {{ frosting_asset(
+              '/asset/frostingDashboard/js/vendor/jquery.js',
+              '/asset/frostingDashboard/js/vendor/underscore.js',
+              '/asset/frostingDashboard/js/vendor/backbone.js',
+              '/asset/frostingDashboard/js/frosting.js',
+              '/asset/frostingDashboard/js/action.js',
+              '/asset/frostingDashboard/js/factory.js',
+              '/asset/frostingDashboard/js/model.js',
+              '/asset/frostingDashboard/js/request.js',
+              '/asset/frostingDashboard/js/userFeedback.js',
+              '/asset/frostingDashboard/js/view.js'
+             ) 
+          }}
+        {% endblock %}
+        <link rel="icon" type="image/x-icon" href="/asset/images/favicon.ico" />
+    </head>
+    <body>
+        <div class="container"></div>
+        <div class="menu"></div>
+        {% block body %}
+        <script type="text/javascript">
+        /* <![CDATA[ */
+        var App;
+        (function($) {
+           App = {};
+           App.Frosting = new Frosting.Controller(
+            {
+              mainContainer:$('body div.container'),
+              menuContainer:$('body div.menu')
+            }
+           );
+           App.Frosting.load({url: "{{ result }}"});
+        })(jQuery);
+        /* ]]> */
+        </script>
+        {% endblock %}
+    </body>
+</html>

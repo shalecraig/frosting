@@ -68,3 +68,22 @@ function array_deep_merge()
   
   return $return;
 }
+
+/**
+ * Iterator trough a traversable recursively
+ * 
+ * @param mixed $traversable
+ * @return array
+ */
+function iterator_to_array_recursive($traversable)
+{
+  $results = array();
+  
+  foreach($traversable as $key => $value) {
+    if(is_array($value) || is_object($value)) {
+      $value = iterator_to_array_recursive($value);
+    }
+    $results[$key] = $value;
+  }
+  return $results;
+}

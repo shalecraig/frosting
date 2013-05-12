@@ -29,8 +29,9 @@ class TwigRendererTest extends \PHPUnit_Framework_TestCase
   public function testCanRender()
   {
     $this->assertTrue($this->renderer->canRender('/fixtures/toRender.twig'));
+    $this->assertTrue($this->renderer->canRender('/fixtures/toRender'));
     $this->assertFalse($this->renderer->canRender('notexistingFile.twig'));
-    $this->assertFalse($this->renderer->canRender('TwigRendererTest'));
+    $this->assertFalse($this->renderer->canRender('/fixtures/toRender.badExtension'));
   }
   
   public function testRender()
