@@ -145,8 +145,10 @@ class ObjectFactory implements IObjectFactoryService
         array($reflectionClass->getMethod('__selfFactory'),'invoke'),
         $parameters
       );
-    } else {
+    } elseif($reflectionClass->hasMethod('__construct')) {
       $object = $reflectionClass->newInstanceArgs($constructorArguments);
+    } else {
+      $object = $reflectionClass->newInstance();
     }
     
     foreach($this->builders as $builder) {
