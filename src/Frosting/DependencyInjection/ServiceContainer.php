@@ -28,7 +28,8 @@ class ServiceContainer implements IServiceContainer
     $neededServices = array(
       'annotationParser',
       'objectFactory',
-      'configuration'
+      'configuration',
+      'fileSystem',
     );
     
     $services = array('serviceContainer'=>$this);
@@ -55,7 +56,7 @@ class ServiceContainer implements IServiceContainer
       $services['configuration']->merge(array($serviceName=>$serviceConfiguraton));
     }
 
-    $generator = new ContainerGenerator($services['annotationParser'],$configuration);
+    $generator = new ContainerGenerator($services['annotationParser'],$services['fileSystem'],$configuration);
     $path = $services['configuration']->get("[configuration][generatedDirectory]");
     $className = $generator->generate(
       $path,

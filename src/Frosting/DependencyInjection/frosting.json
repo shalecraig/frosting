@@ -2,7 +2,8 @@
     "imports": [
         "../Configuration/frosting.json",
         "../ObjectFactory/frosting.json",
-        "../Annotation/frosting.json"
+        "../Annotation/frosting.json",
+        "../FileSystem/frosting.json"
     ],
     "services": {
       "serviceContainer": {

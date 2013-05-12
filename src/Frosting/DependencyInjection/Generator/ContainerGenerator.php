@@ -8,6 +8,7 @@
 namespace Frosting\DependencyInjection\Generator;
 
 use Frosting\IService\Annotation\IAnnotationParserService;
+use Frosting\IService\FileSystem\IFileSystemService;
 
 /**
  * Description of ContainerGenerator
@@ -25,7 +26,15 @@ class ContainerGenerator
   
   private $servicesTags = array();
   
+  /**
+   * @var \Frosting\IService\Annotation\IAnnotationParserService
+   */
   private $annotationParser;
+  
+  /**
+   * @var \Frosting\IService\FileSystem\IFileSystemService
+   */
+  private $fileSystem;
   
   /**
    * @var \Frosting\IService\Annotation\IParsingResult
@@ -35,10 +44,14 @@ class ContainerGenerator
   /**
    * @param array $servicesConfiguration
    */
-  public function __construct(IAnnotationParserService $annotationParser, $servicesConfiguration)
+  public function __construct(
+    IAnnotationParserService $annotationParser, 
+    IFileSystemService $fileSystem,      
+    $servicesConfiguration)
   {
     $this->annotationParser = $annotationParser;
     $this->configuration = $servicesConfiguration;
+    $this->fileSystem = $fileSystem;
   }
   
   public function getServiceConfiguration($serviceName)
@@ -112,7 +125,7 @@ class ContainerGenerator
     }
     
     $file = $generationPath . '/' . $className . '.php';
-    if(!file_exists($file) || ($checkChange && $this->mustBeRegenerated(filemtime($file)))) {
+    if(!$this->fileSystem->exists($file) || ($checkChange && $this->mustBeRegenerated(filemtime($file)))) {
       
       $this->classDefinition = new \Mandango\Mondator\Definition\Definition($className);
       $this->classDefinition->addInterface('\Frosting\IService\DependencyInjection\IServiceContainer');
@@ -189,7 +202,7 @@ class ContainerGenerator
       
       $this->finalizeClassDefinition();
       $dumper = new \Mandango\Mondator\Dumper($this->classDefinition);
-      file_put_contents($file, $dumper->dump());
+      $this->fileSystem->dumpFile($file, $dumper->dump());
     }
     
     return $className;

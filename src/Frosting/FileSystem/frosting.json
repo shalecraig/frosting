@@ -1,0 +1,7 @@
+{
+    "services": {
+        "fileSystem": {
+            "class": "Frosting\\FileSystem\\FileSystemService"
+        }
+    }
+}
