@@ -116,14 +116,29 @@ class BusinessRuleEngine
   public function check($ruleComposition, $context = "default", array $contextParameters = array())
   {
     $engine = $this;
+    //This is to prevent the enforce method to have all the parameters
+    //And also prevent to assign the parameter to the object
     $callback = function($rule) use ($engine, $contextParameters, $context) {
-      list($ruleName, $ruleParameters) = $engine->extractRuleParameters($rule);
-      $ruleParameters = new ArrayObject($ruleParameters);
-      $ruleObject = $this->getRule($ruleName, $context, $ruleParameters);
-      return $this->invoker->invoke($ruleObject,$ruleParameters->getArrayCopy(),$contextParameters);
+      return $engine->verifyRule($rule, $contextParameters, $context);
     };
     
     return $this->enforce($ruleComposition, $callback);
+  }
+  
+  /**
+   * This method should not be called directly
+   * 
+   * @param string $rule
+   * @param array $contextParameters
+   * @param string $context
+   * @return boolean
+   */
+  public function verifyRule($rule, $contextParameters, $context)       
+  {
+    list($ruleName, $ruleParameters) = $this->extractRuleParameters($rule);
+    $ruleParameters = new ArrayObject($ruleParameters);
+    $ruleObject = $this->getRule($ruleName, $context, $ruleParameters);
+    return $this->invoker->invoke($ruleObject,$ruleParameters->getArrayCopy(),$contextParameters);
   }
   
   private function getRule($ruleName, $context, ArrayObject $parameters)
