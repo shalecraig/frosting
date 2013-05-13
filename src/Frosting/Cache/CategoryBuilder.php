@@ -9,6 +9,7 @@ namespace Frosting\Cache;
 
 use Frosting\IService\ObjectFactory\IObjectBuilder;
 use Frosting\IService\Cache\ICacheService;
+use Frosting\Cache\ICacheCategory;
 
 /**
  * Description of CategoryFactory
@@ -36,7 +37,7 @@ class CategoryBuilder implements IObjectBuilder
   
   public function initializeObject($service,array $contextParameters = array()) 
   {
-    if(!($service instanceof Category)) {
+    if(!($service instanceof ICacheCategory)) {
       return;
     }
     $this->build($service,$contextParameters['serviceName'],$contextParameters['configuration']);
