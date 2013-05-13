@@ -10,6 +10,8 @@ use Assetic\Filter\ScssphpFilter;
 use Frosting\Framework\Frosting;
 use Assetic\Asset\AssetCollection;
 use Assetic\Filter\CssRewriteFilter;
+use Assetic\Filter\LessphpFilter;
+
 
 /**
  * Description of Manager
@@ -145,8 +147,14 @@ class Manager
       }
       
       switch(pathinfo($path, PATHINFO_EXTENSION)) {
+        case 'less':
+          $asset->ensureFilter(new LessphpFilter());
+          $cssFiles[] = $asset;
+          break;
         case 'scss':
           $asset->ensureFilter(new ScssphpFilter());
+          $cssFiles[] = $asset;
+          break;
         case 'css':
           $cssFiles[] = $asset;
           break;
@@ -203,7 +211,7 @@ class Manager
   
   /**
    * @param mixed $configuration
-   * @return AssetManager
+   * @return Manager
    */
   public static function factory($configuration = null)
   {
