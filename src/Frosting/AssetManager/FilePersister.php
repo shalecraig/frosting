@@ -7,6 +7,8 @@
 
 namespace Frosting\AssetManager;
 
+use Frosting\IService\FileSystem\IFileSystemService;
+
 /**
  * Description of FilePersister
  *
@@ -15,6 +17,21 @@ namespace Frosting\AssetManager;
 class FilePersister 
 {
   private $rootDirectory;
+  
+  /**
+   * @var \Frosting\IService\FileSystem\IFileSystemService
+   */
+  private $fileSystem;
+  
+  /**
+   * @param \Frosting\IService\FileSystem\IFileSystemService $fileSystem
+   * 
+   * @Inject
+   */
+  public function initialize(IFileSystemService $fileSystem)
+  {
+    $this->fileSystem = $fileSystem;
+  }
   
   /**
    * @param strin $directory
@@ -28,12 +45,7 @@ class FilePersister
   
   public function persist($filePath, $content)
   {
-    $dir = dirname($filePath);
-    $path = $this->rootDirectory . '/' . $dir;
-    if(!is_dir($path)) {
-      mkdir($path, 0777, true);
-    }
-    file_put_contents($this->rootDirectory . '/' . $filePath, $content);
+    $this->fileSystem->dumpFile($this->rootDirectory . '/' . $filePath, $content);
     return true;
   }
   
@@ -44,6 +56,6 @@ class FilePersister
   
   public function exists($path)
   {
-    return file_exists($this->rootDirectory . $path);
+    return $this->fileSystem->exists($this->rootDirectory . $path);
   }
 }
