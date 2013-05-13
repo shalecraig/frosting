@@ -19,5 +19,5 @@ interface IAccessControlService
    * @param array $permissionRules Base on the BusinessRule engine
    * @param IAccessControlUser $accessControlUser
    */
-  public function checkPermissions(array $permissionRules, IAccessControlUser $accessControlUser);
+  public function checkPermissions(array $permissionRules, IAccessControlUser $accessControlUser = null);
 }

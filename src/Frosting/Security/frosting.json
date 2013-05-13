@@ -6,7 +6,7 @@
         "accessControl": {
             "class": "Frosting\\Security\\AccessControlManager"
         },
-        "accessControlerUser": {
+        "accessControlUser": {
             "class": "Frosting\\Security\\SessionAccessControlUser"
         },
         "businessRuleEnforcer": {

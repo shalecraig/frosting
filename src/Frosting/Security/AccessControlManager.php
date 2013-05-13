@@ -27,6 +27,11 @@ class AccessControlManager implements IAccessControlService
   private $businessRuleEngine;
   
   /**
+   * @var \Frosting\IService\Security\IAccessControlUser 
+   */
+  private $accessControlUser;
+  
+  /**
    * @param \Frosting\BusinessRule\BusinessRuleEngine $businessRuleEngine
    * 
    * @Inject
@@ -36,8 +41,22 @@ class AccessControlManager implements IAccessControlService
     $this->businessRuleEngine = $businessRuleEnforcer;
   }
   
-  public function checkPermissions(array $permissionRules, IAccessControlUser $accessControlerUser) 
+  /**
+   * @param \Frosting\IService\Security\IAccessControlUser $accessControlUser
+   * 
+   * @Injects
+   */
+  public function setAccessControlUser(IAccessControlUser $accessControlUser)
   {
+    $this->accessControlUser = $accessControlUser;
+  }
+  
+  public function checkPermissions(array $permissionRules, IAccessControlUser $accessControlerUser = null) 
+  {
+    if(is_null($accessControlerUser)) {
+      $accessControlerUser = $this->accessControlUser;
+    }
+    
     return $this->businessRuleEngine->check(
       $permissionRules, 
       self::BUSINESS_RULE_CONTEXT, 
