@@ -36,6 +36,9 @@ class CategoryBuilder implements IObjectBuilder
   
   public function initializeObject($service,array $contextParameters = array()) 
   {
+    if(!($service instanceof Category)) {
+      return;
+    }
     $this->build($service,$contextParameters['serviceName'],$contextParameters['configuration']);
   }
   
