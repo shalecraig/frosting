@@ -8,6 +8,7 @@
       "../Routing/frosting.json",
       "../View/frosting.json",
       "../AssetManager/frosting.json",
-      "../FrontController/frosting.json"
+      "../FrontController/frosting.json",
+      "../Security/frosting.json"
     ]
 }
