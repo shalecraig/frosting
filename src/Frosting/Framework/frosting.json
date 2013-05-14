@@ -10,5 +10,10 @@
       "../AssetManager/frosting.json",
       "../FrontController/frosting.json",
       "../Security/frosting.json"
-    ]
+    ],
+    "services": {
+      "clock": {
+        "class": "Frosting\\Framework\\Clock"
+      }
+    }
 }
