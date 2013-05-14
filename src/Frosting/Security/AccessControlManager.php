@@ -36,9 +36,9 @@ class AccessControlManager implements IAccessControlService
    * 
    * @Inject
    */
-  public function initialize(BusinessRuleEngine $businessRuleEnforcer)
+  public function initialize(BusinessRuleEngine $businessRuleEngine)
   {
-    $this->businessRuleEngine = $businessRuleEnforcer;
+    $this->businessRuleEngine = $businessRuleEngine;
   }
   
   /**

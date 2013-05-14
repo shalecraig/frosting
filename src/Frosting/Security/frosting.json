@@ -9,7 +9,7 @@
         "accessControlUser": {
             "class": "Frosting\\Security\\SessionAccessControlUser"
         },
-        "businessRuleEnforcer": {
+        "businessRuleEngine": {
             "configuration": {
                 "defaultRules": {
                     "security": { "rule": "hasPermission", "parameter":"permission" }

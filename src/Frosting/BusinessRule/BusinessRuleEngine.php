@@ -224,6 +224,6 @@ class BusinessRuleEngine
       $configuration = __DIR__ . '/frosting.json';
     }
     
-    return Frosting::serviceFactory($configuration,'businessRuleEnforcer');
+    return Frosting::serviceFactory($configuration,'businessRuleEngine');
   }
 }
