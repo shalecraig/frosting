@@ -13,7 +13,8 @@
     ],
     "services": {
       "clock": {
-        "class": "Frosting\\Framework\\Clock"
+        "class": "Frosting\\Framework\\Clock",
+        "configuration": []
       }
     }
 }

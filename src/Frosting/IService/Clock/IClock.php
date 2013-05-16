@@ -34,4 +34,20 @@ interface IClock
    * @return mixed 
    */
   public function now($format = "U");
+  
+  /**
+   * Return the timestamp diffrence between the time() and the IClock::now()
+   * 
+   * @return int
+   */
+  public function getTimestampDifference();
+  
+  /**
+   * Return a string to time base on the now date. If strtotime refer to a date
+   * it will use the date. If all the element are relative it will use the
+   * now reference.
+   * 
+   * @param string $time
+   */
+  public function strtotime($time);
 }
