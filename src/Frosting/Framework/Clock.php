@@ -53,9 +53,15 @@ class Clock implements IClock
   public function strtotime($time)
   {
     if(strtotime($time,$this->now) == strtotime($time)) {
-      return strtotime($time);
+      $result = strtotime($time);
+    } else {
+      $result = strtotime($time,$this->now);
     }
     
-    return strtotime($time) - $this->getTimestampDifference();
+    if($result === false) {
+      throw new \RuntimeException('The time [' . $time . '] cannot be converted to int');
+    }
+    
+    return $result;
   }
 }

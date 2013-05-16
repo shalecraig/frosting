@@ -36,4 +36,11 @@ class ClockTest extends \PHPUnit_Framework_TestCase
     $clock->alter('+ 10 seconds');
     $this->assertEquals($clock->now(), strtotime('2013-05-14') + 10);
   }
+  
+  public function testStrtotime()
+  {
+    $clock = new Clock();
+    $clock->setNow('2000-01-01');
+    $this->assertEquals('2000-01-16',date('Y-m-d',$clock->strtotime('January +15 days')));
+  }
 }

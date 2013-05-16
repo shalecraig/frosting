@@ -56,6 +56,7 @@ class RuleDateBeforeTest extends \PHPUnit_Framework_TestCase
       array("- 10 seconds",'2011-10-01',false),
       array("2012-01-01",'2011-10-01',true),
       array("2010-01-01",'2011-10-01',false),
+      array("January +15 days",null,true),
     );
   }
 }
