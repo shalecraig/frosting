@@ -58,7 +58,7 @@ class Clock implements IClock
   
   public function strtotime($time)
   {
-    if(strtotime($time,$this->now) == strtotime($time)) {
+    if(is_null($this->now) || strtotime($time,$this->now) == strtotime($time)) {
       $result = strtotime($time);
     } else {
       $result = strtotime($time,$this->now);
