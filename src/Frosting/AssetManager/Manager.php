@@ -27,6 +27,11 @@ class Manager
    */
   private $filePersister;
   
+  /**
+   * @var UrlBuilder 
+   */
+  private $urlBuilder;
+  
   const WATCH_DIRECTORY_DELAY = 5;
   
   /**
@@ -34,10 +39,11 @@ class Manager
    * 
    * @Inject(configuration="$")
    */
-  public function initialize(array $configuration, FilePersister $assetManagerFilerPersister)
+  public function initialize(array $configuration, FilePersister $assetManagerFilerPersister, UrlBuilder $urlBuilder)
   {
     $this->configuration = $configuration;
     $this->filePersister = $assetManagerFilerPersister;
+    $this->urlBuilder = $urlBuilder;
   }
   
   /**
@@ -56,7 +62,7 @@ class Manager
    * @param string $fileType
    * @return string Absolute URI 
    */
-  public function getUrl(AssetInterface $asset, $fileType = 'css')
+  public function getAssetUrl(AssetInterface $asset, $fileType = 'css')
   {
     $key = $this->getCacheKey($asset);
     
@@ -74,7 +80,12 @@ class Manager
       $this->filePersister->persist($targetPath,$asset->dump());
     }
     
-    return '/' . $targetPath;
+    return $this->getUrl('/' . $targetPath);
+  }
+  
+  public function getUrl($relativePath)
+  {
+    return $this->urlBuilder->getUrl($relativePath);
   }
   
   private function applyFilters(AssetInterface $asset, $fileType)
@@ -175,11 +186,11 @@ class Manager
     $tags = array();
    
     foreach($cssFiles as $file) {
-      $tags[] = '<link rel="stylesheet" href="' . $this->getUrl($file,'css') . '" type="text/css" />';
+      $tags[] = '<link rel="stylesheet" href="' . $this->getAssetUrl($file,'css') . '" type="text/css" />';
     }
     
     foreach($jsFiles as $file) {
-      $tags[] = "<script src='" . $this->getUrl($file,'js') . "'></script>";
+      $tags[] = "<script src='" . $this->getAssetUrl($file,'js') . "'></script>";
     }
     
     return $tags;

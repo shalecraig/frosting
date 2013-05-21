@@ -7,6 +7,9 @@
                 "aggregation": false
             }
         },
+        "urlBuilder": {
+            "class": "Frosting\\AssetManager\\UrlBuilder"
+        },
         "assetManagerTwigExtension": {
             "class": "Frosting\\AssetManager\\Twig\\AssetManagerExtension"
         },
