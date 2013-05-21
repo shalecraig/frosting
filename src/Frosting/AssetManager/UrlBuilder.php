@@ -7,12 +7,14 @@
 
 namespace Frosting\AssetManager;
 
+use  Frosting\IService\AssetManager\IUrlBuilder;
+
 /**
  * Description of UrlBuilder
  *
  * @author Martin
  */
-class UrlBuilder 
+class UrlBuilder implements IUrlBuilder
 {
   public function getUrl($relativePath)
   {

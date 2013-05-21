@@ -11,6 +11,7 @@ use Frosting\Framework\Frosting;
 use Assetic\Asset\AssetCollection;
 use Assetic\Filter\CssRewriteFilter;
 use Assetic\Filter\LessphpFilter;
+use Frosting\IService\AssetManager\IUrlBuilder;
 
 
 /**
@@ -28,7 +29,7 @@ class Manager
   private $filePersister;
   
   /**
-   * @var UrlBuilder 
+   * @var \Frosting\IService\AssetManager\IUrlBuilder 
    */
   private $urlBuilder;
   
@@ -39,7 +40,7 @@ class Manager
    * 
    * @Inject(configuration="$")
    */
-  public function initialize(array $configuration, FilePersister $assetManagerFilerPersister, UrlBuilder $urlBuilder)
+  public function initialize(array $configuration, FilePersister $assetManagerFilerPersister, IUrlBuilder $urlBuilder)
   {
     $this->configuration = $configuration;
     $this->filePersister = $assetManagerFilerPersister;
