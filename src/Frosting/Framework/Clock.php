@@ -32,7 +32,13 @@ class Clock implements IClock
   
   public function setNow($time)
   {
-    $this->now = strtotime($time);
+    if(!is_null($result)) {
+      $result = strtotime($time);
+      if($result === false) {
+        throw new \RuntimeException('The time [' . $time . '] cannot be converted to int');
+      }
+    }
+    $this->now = $result; 
   }
   
   public function alter($time) 
