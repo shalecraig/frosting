@@ -87,3 +87,23 @@ function iterator_to_array_recursive($traversable)
   }
   return $results;
 }
+
+/**
+ * Sort with multiple callback so if the first one have a result of equality (0)
+ * the next one will be call. This allow to have sort on multiple "columns"
+ * 
+ * @param array $array The array to sort
+ * @param array $callbacks The list of callback to call
+ */
+function usort_multi_level(&$array,array $callbacks)
+{
+  usort($array, function($a, $b) use ($callbacks) {
+    foreach($callbacks as $callback) {
+      $compareResult = call_user_func($callback,$a,$b);
+      if($compareResult !== 0) {
+        return $compareResult;
+      }
+    }
+    return 0;
+  });
+}
