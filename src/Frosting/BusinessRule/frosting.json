@@ -10,7 +10,9 @@
             "configuration": {
               "rules": {
                 "date\\before": "Frosting\\BusinessRule\\Rule\\DateBefore",
-                "date\\after": "Frosting\\BusinessRule\\Rule\\DateAfter"
+                "date\\after": "Frosting\\BusinessRule\\Rule\\DateAfter",
+                "default\\configuration": "Frosting\\BusinessRule\\Rule\\Configuration",
+                "default\\debug": "Frosting\\BusinessRule\\Rule\\Debug"
               }
             }
         },
