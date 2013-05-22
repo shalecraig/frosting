@@ -49,8 +49,8 @@ the services need for the framework to work. All the services have their own
 configuration file so you might build your own custom configuration file without
 the loading everything, will talk about that more later. And you can also see
 the Dashboard/frosting.json file, this file is more the custom service for this 
-application, like a third party would have done. *Note that the file path specified
-in the import can be relative to the file itself*.
+application, like a third party would have done. **Note that the file path specified
+in the import can be relative to the file itself**.
 
 Whitin the file you can see the is a definition of a service named "customService"
 and the class that it will use for the instanciation of this service.
@@ -109,8 +109,8 @@ are abstract and normally need you to implement a getter method specific to the
 service you want to test. That way you don't need to write a full unit test
 if you want to do your own implementation of a service. You might need to test
 your own custom method, but the generic service interface will be fully tested
-from the abstract test. *Even if we refer it at Unit Test, consider them as
-integration test since we are trying to use the less amount of mock object possible*
+from the abstract test. **Even if we refer it at Unit Test, consider them as
+integration test since we are trying to use the less amount of mock object possible**
 
 Service you should know about
 -----------------------------
@@ -161,11 +161,28 @@ more and usefull method in your api):
     }
 
 If you are using an app or browser that have a accept application/json header
-it will render accordingly. *I'm using firefox with the JsonView add-on and also
+it will render accordingly. **I'm using firefox with the JsonView add-on and also
 edit the accept header via the about:config adress of firefox to add
-application/json in the list* 
+application/json in the list** 
 
-You should get a anwer like this (result being the default root attribute):
+In the root file of your application (you might want to use a modrewrite for that)
+you must put:
+
+    <?php
+
+    require_once(__DIR__ . '/../vendor/autoload.php');
+
+    $request = Symfony\Component\HttpFoundation\Request::createFromGlobals();
+
+    \Frosting\Framework\Frosting::serviceFactory(
+      __DIR__ . '/../frosting.json',              //The path to you json file
+      "frontController"
+    )->handleRequest($request);
+
+As you see the system is base on composer and is also using the symfony/httpfoundation
+component for it's request.
+
+You should get a answer like this (result being the default root attribute):
 
     //url   http://domain.com/myApi/time
     {"result":1369244261}
@@ -220,5 +237,5 @@ can add the service in the configuration file and inject it to your api:
       }
     }
 
-If you didn't read the documentation of the *Service you should know about* section
+If you didn't read the documentation of the **Service you should know about** section
 you might not understand everything, this is a good time to go take a look to it.
