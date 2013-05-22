@@ -7,7 +7,6 @@
 
 namespace Frosting\FrontController;
 
-use Frosting\IService\View\IViewRendererService;
 use Frosting\IService\Invoker\IInvokerService;
 use Frosting\IService\DependencyInjection\IServiceContainer;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,11 +21,6 @@ use Frosting\IService\EventDispatcher\IEventDispatcherService;
  */
 class FrontController 
 {
-  /**
-   * @var \Frosting\IService\View\IViewRendererService
-   */
-  private $viewRenderer;
-  
   /**
    * @var \Frosting\IService\Invoker\IInvokerService 
    */
@@ -55,7 +49,6 @@ class FrontController
   private $eventDispatcher;
   
   /**
-   * @param \Frosting\IService\View\IViewRendererService $viewRenderer
    * @param \Frosting\IService\Invoker\IInvokerService $invoker
    * @param \Frosting\IService\DependencyInjection\IServiceContainer $serviceContainer
    * @param \Frosting\Routing\Router $routing
@@ -64,13 +57,11 @@ class FrontController
    */
   public function initialize(
     IServiceContainer $serviceContainer,
-    IViewRendererService $viewRenderer, 
     IInvokerService $invoker,
     Router $routing,
     IEventDispatcherService $eventDispatcher
   )
   {
-    $this->viewRenderer = $viewRenderer;
     $this->invoker = $invoker;
     $this->serviceContainer = $serviceContainer;
     $this->routing = $routing;
