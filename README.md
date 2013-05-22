@@ -1,7 +1,9 @@
 Frosting
 ========
 
-Small learning curve PHP framework for professional application development
+Small learning curve PHP framework for professional application development.
+
+[![Build Status](https://api.travis-ci.org/mpoiriert/frosting.png?branch=master)](http://travis-ci.org/mpoiriert/frosting)
 
 Frosting want to be a independant standalone framework, but also, with the
 help of adapter, being use in any other PHP framework. Using dependency injection,
