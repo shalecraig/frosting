@@ -32,6 +32,7 @@ class Clock implements IClock
   
   public function setNow($time)
   {
+    $result = null;
     if(!is_null($time)) {
       $result = strtotime($time);
       if($result === false) {
