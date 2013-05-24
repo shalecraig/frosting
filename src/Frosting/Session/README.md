@@ -32,3 +32,8 @@ Here is a simple service that you can make to see.
         }
     }
 
+If you want to access this value from another service you can do a getter method
+on this service and inject it in the service that need to access the value. This
+system make it really simple to save value to session and be sure that nobody
+mess around with the value. If it can be access for read or write the complete
+responsability is in the class that declared it.
