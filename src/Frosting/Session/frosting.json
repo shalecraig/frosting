@@ -1,0 +1,13 @@
+{
+    "imports": [
+        "../BusinessRule/frosting.json"
+    ],
+    "services": {
+        "session": {
+            "class": "Frosting\\Session\\Session"
+        },
+        "sessionServiceBounder": {
+            "class": "Frosting\\Session\\ServiceBounder"
+        }
+    }
+}

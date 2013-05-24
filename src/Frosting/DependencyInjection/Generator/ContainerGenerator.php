@@ -245,7 +245,7 @@ class ContainerGenerator
         throw new \Frosting\IService\DependencyInjection\ServiceDoesNotExistsException(\'The service named [\' . $name . \'] does not exists.\');
       }
       $service = call_user_func(array($this,$method));
-      if($service instanceof \core\service\ILifeCycleAware) {
+      if($service instanceof \Frosting\IService\DependencyInjection\ILifeCycleAware) {
         $service->start();
       }
     }
@@ -288,7 +288,7 @@ class ContainerGenerator
     $shutdownMethod->setArguments('');
     $shutdownMethod->setCode('
     foreach($this->services as $service) {
-      if($service instanceof \core\service\ILifeCycleAware) {
+      if($service instanceof \Frosting\IService\DependencyInjection\ILifeCycleAware) {
         $service->shutdown();
       }
     }

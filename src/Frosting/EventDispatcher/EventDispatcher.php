@@ -8,6 +8,9 @@ use Frosting\IService\EventDispatcher\IEvent;
 use Frosting\Framework\Frosting;
 use Frosting\IService\Invoker\IInvokerService;
 
+/**
+ * @Tag("autoStart")
+ */
 class EventDispatcher implements IEventDispatcherService
 {
   /**

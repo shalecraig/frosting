@@ -50,6 +50,7 @@ class ServiceContainer implements IServiceContainer
     $services['annotationParser']->addNamespace("Frosting\DependencyInjection");
     $services['annotationParser']->addNamespace("Frosting\Framework\EventDispatcher");
     $services['annotationParser']->addNamespace("Frosting\ObjectFactory");
+    $services['annotationParser']->addNamespace("Frosting\Session");
 
     foreach($configuration as $serviceName => $serviceParameter) {
       $serviceConfiguraton = isset($serviceParameter['configuration']) ? $serviceParameter['configuration'] : null;
@@ -80,7 +81,10 @@ class ServiceContainer implements IServiceContainer
     $services['objectFactory']->setServiceContainer($container);
     
     $container->initialize();
-    return $container;
+    
+    $this->getServicesByTag("autoStart");
+    
+    register_shutdown_function(array($this,'shutdown'));
   }
   
   private function initialize() 

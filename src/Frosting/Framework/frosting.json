@@ -9,7 +9,8 @@
       "../View/frosting.json",
       "../AssetManager/frosting.json",
       "../FrontController/frosting.json",
-      "../Security/frosting.json"
+      "../Security/frosting.json",
+      "../Session/frosting.json"
     ],
     "services": {
       "clock": {
