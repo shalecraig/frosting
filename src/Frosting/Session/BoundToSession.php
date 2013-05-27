@@ -31,17 +31,17 @@ class BoundToSession  implements IServiceContainerGeneratorAnnotation
   {
     $method = $generator->getServiceGetterMethod($serviceName);
     $currentCode = $method->getCode();
-    $serviceBounderAssignation = '
-    $sessionServiceBounder = $serviceContainer->getServiceByName("sessionServiceBounder");
+    $serviceBinderAssignation = '
+    $sessionServiceBinder = $serviceContainer->getServiceByName("sessionServiceBinder");
 ';
-    if(strpos($currentCode, $serviceBounderAssignation) === false) {
-      $currentCode .= $serviceBounderAssignation;
+    if(strpos($currentCode, $serviceBinderAssignation) === false) {
+      $currentCode .= $serviceBinderAssignation;
     }
     $currentCode .= '
-    $sessionServiceBounder->addBindingAttribute("' . $serviceName . '","' . $attributeName . '");
+    $sessionServiceBinder->addBindingAttribute("' . $serviceName . '","' . $attributeName . '");
 ';
     $restoreFromSession = '
-    $sessionServiceBounder->restoreFromSession($service,"' . $serviceName . '");
+    $sessionServiceBinder->restoreFromSession($service,"' . $serviceName . '");
 ';
     $finalCode = str_replace($restoreFromSession, "", $currentCode);
     $finalCode .= $restoreFromSession;

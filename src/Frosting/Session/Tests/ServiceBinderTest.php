@@ -2,19 +2,19 @@
 
 namespace Frosting\Security\Tests;
 
-use Frosting\Session\ServiceBounder;
+use Frosting\Session\ServiceBinder;
 
-class SessionServiceBounderTest extends \PHPUnit_Framework_TestCase
+class SessionServiceBinderTest extends \PHPUnit_Framework_TestCase
 {
   /**
    *
-   * @var Frosting\Session\SessionServiceBounder
+   * @var Frosting\Session\SessionServiceBinder
    */
-  private $sessionServiceBounder;
+  private $sessionServiceBinder;
   
   public function setUp() 
   {
-    $this->sessionServiceBounder = new ServiceBounder();
+    $this->sessionServiceBinder = new ServiceBinder();
   }
   
   private function getNewSession()
@@ -34,13 +34,13 @@ class SessionServiceBounderTest extends \PHPUnit_Framework_TestCase
     
     $session = $this->getNewSession();
     $serviceToBoundTo = new ServiceToBoundTo();
-    $this->sessionServiceBounder->setBindingAttributes(
+    $this->sessionServiceBinder->setBindingAttributes(
       'test', 
       $properties
     );
     
-    $this->sessionServiceBounder->setSession($session);
-    $this->sessionServiceBounder->restoreFromSession($serviceToBoundTo, 'test');
+    $this->sessionServiceBinder->setSession($session);
+    $this->sessionServiceBinder->restoreFromSession($serviceToBoundTo, 'test');
     
     foreach($properties as $name) {
       $this->assertEquals($name . 'Default', $serviceToBoundTo->getProperty($name));
@@ -50,7 +50,7 @@ class SessionServiceBounderTest extends \PHPUnit_Framework_TestCase
       $serviceToBoundTo->setProperty($name, $name . 'Value');
     }
     
-    $this->sessionServiceBounder->setToSession($serviceToBoundTo, 'test');
+    $this->sessionServiceBinder->setToSession($serviceToBoundTo, 'test');
     
     $serviceToBoundTo2 = new ServiceToBoundTo();
     
@@ -58,7 +58,7 @@ class SessionServiceBounderTest extends \PHPUnit_Framework_TestCase
       $this->assertEquals($name . 'Default', $serviceToBoundTo2->getProperty($name));
     }
    
-    $this->sessionServiceBounder->restoreFromSession($serviceToBoundTo2, 'test');
+    $this->sessionServiceBinder->restoreFromSession($serviceToBoundTo2, 'test');
     
     foreach($properties as $name) {
       $this->assertEquals($name . 'Value', $serviceToBoundTo2->getProperty($name));

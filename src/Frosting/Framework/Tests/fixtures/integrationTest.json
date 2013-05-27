@@ -5,6 +5,9 @@
   "services": {
     "serviceForTest": {
       "class": "Frosting\\Framework\\Tests\\ServiceForTest"
+    },
+    "sessionStorage": {
+      "class": "Symfony\\Component\\HttpFoundation\\Session\\Storage\\MockArraySessionStorage"
     }
   }
 }

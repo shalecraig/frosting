@@ -6,8 +6,11 @@
         "session": {
             "class": "Frosting\\Session\\Session"
         },
-        "sessionServiceBounder": {
-            "class": "Frosting\\Session\\ServiceBounder"
+        "sessionStorage": {
+            "class": "Symfony\\Component\\HttpFoundation\\Session\\Storage\\NativeSessionStorage"
+        },
+        "sessionServiceBinder": {
+            "class": "Frosting\\Session\\ServiceBinder"
         }
     }
 }

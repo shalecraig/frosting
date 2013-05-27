@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  *
  * @author Martin
  */
-class ServiceBounder
+class ServiceBinder
 {
   private $serviceAttributes = array();
   
