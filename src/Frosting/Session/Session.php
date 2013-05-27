@@ -140,7 +140,7 @@ class Session implements ILifeCycleAware, SessionInterface
 
   public function replace(array $attributes) 
   {
-    return $this->getSymfonySession()->replace($attribute);
+    return $this->getSymfonySession()->replace($attributes);
   }
 
   public function save() 
