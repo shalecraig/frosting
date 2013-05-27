@@ -64,7 +64,11 @@ class Session implements ILifeCycleAware, SessionInterface
     $this->getSymfonySession()->start();
   }
   
-  public function shutdown()
+  public function serviceStart()
+  {
+  }
+  
+  public function serviceShutdown()
   {
     $this->eventDispatcher->dispatch('Session.shutdown',$this);
   }

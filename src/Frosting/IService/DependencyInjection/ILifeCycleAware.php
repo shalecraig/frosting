@@ -13,7 +13,7 @@ namespace Frosting\IService\DependencyInjection;
  */
 interface ILifeCycleAware
 {
-  public function shutdown();
+  public function serviceShutdown();
   
-  public function start();
+  public function serviceStart();
 }

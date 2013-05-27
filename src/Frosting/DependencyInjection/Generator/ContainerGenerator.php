@@ -246,7 +246,7 @@ class ContainerGenerator
       }
       $service = call_user_func(array($this,$method));
       if($service instanceof \Frosting\IService\DependencyInjection\ILifeCycleAware) {
-        $service->start();
+        $service->serviceStart();
       }
     }
     
@@ -289,7 +289,7 @@ class ContainerGenerator
     $shutdownMethod->setCode('
     foreach($this->services as $service) {
       if($service instanceof \Frosting\IService\DependencyInjection\ILifeCycleAware) {
-        $service->shutdown();
+        $service->serviceShutdown();
       }
     }
     ');
