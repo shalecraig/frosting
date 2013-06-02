@@ -2,8 +2,9 @@
 
 namespace Frosting\IService\DependencyInjection\Tests;
 
-use \Frosting\IService\DependencyInjection\ServiceDoesNotExistsException;
-use \Frosting\IService\DependencyInjection\ServiceDisabledException;
+use Frosting\IService\DependencyInjection\ServiceDoesNotExistsException;
+use Frosting\IService\DependencyInjection\ServiceDisabledException;
+use Frosting\IService\DependencyInjection\ILifeCycleAware;
 
 abstract class ServiceContainerTest extends \PHPUnit_Framework_TestCase
 {
@@ -25,7 +26,7 @@ abstract class ServiceContainerTest extends \PHPUnit_Framework_TestCase
   {
     if(is_null($this->serviceContainer)) {
       $this->serviceContainer = $this->getServiceContainer(
-        array(
+        array('services' => array(
           'test' => array (
               'class' => __NAMESPACE__ . '\TestService',
               'configuration' => 'configuration_string'
@@ -40,6 +41,7 @@ abstract class ServiceContainerTest extends \PHPUnit_Framework_TestCase
            'injected' => array (
               'class' => __NAMESPACE__ . '\TestInjectedService',
            ),
+          )  
         )
       );
       $this->assertInstanceOf('\Frosting\IService\DependencyInjection\IServiceContainer', $this->serviceContainer);
@@ -55,7 +57,7 @@ abstract class ServiceContainerTest extends \PHPUnit_Framework_TestCase
     
     $this->assertInstanceOf(__NAMESPACE__ . '\TestService', $serviceTest);
     
-    $this->assertSame($serviceTest, $this->loadServiceContainer()->getServiceByName('test'));
+    $this->assertSame($serviceTest, $serviceContainer->getServiceByName('test'));
     
     try {
       $serviceContainer->getServiceByName('unknow');
@@ -129,10 +131,27 @@ abstract class ServiceContainerTest extends \PHPUnit_Framework_TestCase
     $this->assertSame($itagService, $injectedService->getServiceItag());
     $this->assertSame(array($itagService), $injectedService->getServices());
   }
+  
+  public function testStart()
+  {
+    $service = $this->loadServiceContainer()->getServiceByName("test");
+    $this->assertTrue($service->started);
+  }
 }
 
 if(!class_exists('Frosting\DependencyInjection\Tests\TestService')) {
-  class TestService {}
+  class TestService implements ILifeCycleAware {
+    public $started = false;
+    public function serviceShutdown()
+    {
+      
+    }
+
+    public function serviceStart()
+    {
+      $this->started = true;
+    }    
+  }
   
   class TestInjectedService 
   {

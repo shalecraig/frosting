@@ -8,7 +8,7 @@
 namespace Frosting\BusinessRule;
 
 use Frosting\IService\Invoker\IInvokerService;
-use Frosting\IService\ObjectFactory\IObjectFactoryService;
+use Frosting\IService\DependencyInjection\IServiceContainer;
 use Frosting\Framework\Frosting;
 use ArrayObject;
 use Symfony\Component\Yaml\Yaml;
@@ -38,24 +38,25 @@ class BusinessRuleEngine
   private $invoker;
   
   /**
-   * @var \Frosting\IService\ObjectFactory\IObjectFactoryService 
+   * @var \Frosting\IService\DependencyInjection\IServiceContainer
    */
-  private $objectFactory;
+  private $serviceContainer;
   
-  /** 
-   * @param \Frosting\IService\ObjectFactory\IObjectFactoryService $objectFactory
+  /**
+   * 
+   * @param \Frosting\IService\DependencyInjection\IServiceContainer $serviceContainer
    * @param \Frosting\IService\Invoker\IInvokerService $invoker
    * @param \Symfony\Component\Yaml\Yaml $yamlParser
    * 
    * @Inject
    */
   public function initialize(
-    IObjectFactoryService $objectFactory, 
+    IServiceContainer $serviceContainer, 
     IInvokerService $invoker,
     Yaml $yamlParser
   )
   {
-    $this->objectFactory = $objectFactory;
+    $this->serviceContainer = $serviceContainer;
     $this->invoker = $invoker;
     $this->yamlParser = $yamlParser;
   }
@@ -77,9 +78,9 @@ class BusinessRuleEngine
     }
   }
   
-  public function setRule($rule, $class)
+  public function setRule($rule, $object)
   {
-    $this->rules[$rule] = $class;
+    $this->rulesObject[$rule] = $object;
   }
   
   public function setDefaultRule($context, $ruleName, $parameterName)
@@ -150,18 +151,20 @@ class BusinessRuleEngine
     
     if(is_null($ruleContext)) {
       $ruleContext = $context;
-      if(!isset($this->rules[$ruleContext . '\\' . $ruleName])) {
-        $defaultRuleConfiguration = $this->getDefaultRuleName($context);
-        if($defaultRuleConfiguration['parameter']) {
-          $parameters[$defaultRuleConfiguration['parameter']] = $ruleName;
+      if(!isset($this->rulesObject[$ruleContext . '\\' . $ruleName])) {
+         if(!isset($this->rules[$ruleContext . '\\' . $ruleName])) {
+          $defaultRuleConfiguration = $this->getDefaultRuleName($context);
+          if($defaultRuleConfiguration['parameter']) {
+            $parameters[$defaultRuleConfiguration['parameter']] = $ruleName;
+          }
+          $ruleName = $defaultRuleConfiguration['rule'];
         }
-        $ruleName = $defaultRuleConfiguration['rule'];
       }
     }
-    
+
     if(!isset($this->rulesObject[$ruleContext . '\\' . $ruleName])) {
-      $class = $this->rules[$ruleContext . '\\' . $ruleName];
-      $this->rulesObject[$ruleContext . '\\' . $ruleName] = $this->objectFactory->createObject($class);
+      $serviceName = $this->rules[$ruleContext . '\\' . $ruleName];
+      $this->rulesObject[$ruleContext . '\\' . $ruleName] = $this->serviceContainer->getServiceByName($serviceName);
     }
     
     return $this->rulesObject[$ruleContext . '\\' . $ruleName];

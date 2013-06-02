@@ -1,7 +1,6 @@
 {
     "imports": [
         "../Invoker/frosting.json",
-        "../ObjectFactory/frosting.json",
         "../Framework/frosting.json"
     ],
     "services": {
@@ -9,12 +8,24 @@
             "class": "Frosting\\BusinessRule\\BusinessRuleEngine",
             "configuration": {
               "rules": {
-                "date\\before": "Frosting\\BusinessRule\\Rule\\DateBefore",
-                "date\\after": "Frosting\\BusinessRule\\Rule\\DateAfter",
-                "default\\configuration": "Frosting\\BusinessRule\\Rule\\Configuration",
-                "default\\debug": "Frosting\\BusinessRule\\Rule\\Debug"
+                "date\\before": "businessRuleEngine.rule.dateBefore",
+                "date\\after": "businessRuleEngine.rule.dateAfter",
+                "default\\configuration": "businessRuleEngine.rule.configuration",
+                "default\\debug": "businessRuleEngine.rule.debug"
               }
             }
+        },
+        "businessRuleEngine.rule.dateBefore": {
+            "class": "Frosting\\BusinessRule\\Rule\\DateBefore"
+        },
+        "businessRuleEngine.rule.dateAfter": {
+            "class": "Frosting\\BusinessRule\\Rule\\DateAfter"
+        },
+        "businessRuleEngine.rule.configuration": {
+            "class": "Frosting\\BusinessRule\\Rule\\Configuration"
+        },
+        "businessRuleEngine.rule.debug": {
+            "class": "Frosting\\BusinessRule\\Rule\\Debug"
         },
         "yamlParser": {
             "class": "Symfony\\Component\\Yaml\\Yaml"

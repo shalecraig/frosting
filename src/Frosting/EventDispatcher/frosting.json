@@ -6,5 +6,8 @@
         "eventDispatcher": {
             "class": "Frosting\\EventDispatcher\\EventDispatcher"
         }
+    },
+    "frosting": {
+      "annotationNamespaces": ["Frosting\\EventDispatcher"]
     }
 }

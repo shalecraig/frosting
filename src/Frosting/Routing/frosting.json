@@ -3,5 +3,8 @@
         "routing": {
             "class": "Frosting\\Routing\\Router"
         }
+    },
+    "frosting": {
+      "annotationNamespaces": ["Frosting\\Routing"]
     }
 }

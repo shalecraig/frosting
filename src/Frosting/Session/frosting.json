@@ -12,5 +12,8 @@
         "sessionServiceBinder": {
             "class": "Frosting\\Session\\ServiceBinder"
         }
+    },
+    "frosting": {
+        "annotationNamespaces": ["Frosting\\Session"]
     }
 }

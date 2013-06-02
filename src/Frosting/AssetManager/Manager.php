@@ -40,10 +40,10 @@ class Manager
    * 
    * @Inject(configuration="$")
    */
-  public function initialize(array $configuration, FilePersister $assetManagerFilerPersister, IUrlBuilder $urlBuilder)
+  public function initialize(array $configuration, FilePersister $assetManagerFilePersister, IUrlBuilder $urlBuilder)
   {
     $this->configuration = $configuration;
-    $this->filePersister = $assetManagerFilerPersister;
+    $this->filePersister = $assetManagerFilePersister;
     $this->urlBuilder = $urlBuilder;
   }
   

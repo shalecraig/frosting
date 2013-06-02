@@ -29,7 +29,7 @@ class BusinessRuleEngineTest extends \PHPUnit_Framework_TestCase
   public function testCheck($ruleCompositions,$expected)
   {
     $objectBoolean = new TestBoolean();
-    $this->businessRuleEngine->setRule('test\\default', __NAMESPACE__ . '\\TestDefaultTrueRule');
+    $this->businessRuleEngine->setRule('test\\default', new TestDefaultTrueRule());
     $this->assertSame($expected,$this->businessRuleEngine->check($ruleCompositions,'test',array($objectBoolean)));
   }
   
@@ -57,7 +57,7 @@ class BusinessRuleEngineTest extends \PHPUnit_Framework_TestCase
   {
     $ruleNames = new TestRuleNames($ruleNames);
     $this->businessRuleEngine->setDefaultRule('test', 'bla', 'ruleName');
-    $this->businessRuleEngine->setRule('test\\bla', __NAMESPACE__ . '\\TestBlaRule');
+    $this->businessRuleEngine->setRule('test\\bla',new TestBlaRule());
     $this->assertSame($expected,$this->businessRuleEngine->check($rulesComposition,'test',array($ruleNames)));
   }
   
@@ -79,7 +79,7 @@ class BusinessRuleEngineTest extends \PHPUnit_Framework_TestCase
     list($firstTrueIndex,$rules) = $this->prepareMultipleCheck();
     
     $objectBoolean = new TestBoolean();
-    $this->businessRuleEngine->setRule('test\\default', __NAMESPACE__ . '\\TestDefaultTrueRule');
+    $this->businessRuleEngine->setRule('test\\default', new TestDefaultTrueRule());
     $this->assertSame(
       $firstTrueIndex,
       $this->businessRuleEngine->getFirstMatch($rules,'test',array($objectBoolean))
@@ -91,7 +91,7 @@ class BusinessRuleEngineTest extends \PHPUnit_Framework_TestCase
     list(,$rules,$trueIndexes) = $this->prepareMultipleCheck();
     
     $objectBoolean = new TestBoolean();
-    $this->businessRuleEngine->setRule('test\\default', __NAMESPACE__ . '\\TestDefaultTrueRule');
+    $this->businessRuleEngine->setRule('test\\default', new TestDefaultTrueRule());
     $this->assertSame(
       $trueIndexes,
       $this->businessRuleEngine->getAllMatches($rules,'test',array($objectBoolean))
@@ -126,9 +126,9 @@ class BusinessRuleEngineTest extends \PHPUnit_Framework_TestCase
   public function testMixContext($ruleCompositions,$expected)
   {
     $objectBoolean = new TestBoolean();
-    $this->businessRuleEngine->setRule('test\\default', __NAMESPACE__ . '\\TestDefaultTrueRule');
-    $this->businessRuleEngine->setRule('default\\true', __NAMESPACE__ . '\\TestTrue');
-    $this->businessRuleEngine->setRule('default\\false', __NAMESPACE__ . '\\TestFalse');
+    $this->businessRuleEngine->setRule('test\\default', new TestDefaultTrueRule());
+    $this->businessRuleEngine->setRule('default\\true', new TestTrue());
+    $this->businessRuleEngine->setRule('default\\false',new TestFalse());
     $this->assertSame($expected,$this->businessRuleEngine->check($ruleCompositions,'default',array($objectBoolean)));
   }
   
@@ -152,7 +152,7 @@ class BusinessRuleEngineTest extends \PHPUnit_Framework_TestCase
   public function testWithParameters($ruleCompositions,$realParameters)
   {
     $exactMatch = new TestExactMatchValidator($realParameters);
-    $this->businessRuleEngine->setRule('default\\allMatch', __NAMESPACE__ . '\\TestExactMatchRule');
+    $this->businessRuleEngine->setRule('default\\allMatch', new TestExactMatchRule());
     $this->assertTrue($this->businessRuleEngine->check($ruleCompositions,'default',array($exactMatch)));
   }
   

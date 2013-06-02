@@ -10,7 +10,7 @@ namespace Frosting\Routing;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\Route as SymfonyRoute;
 use Frosting\Framework\Frosting;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 
@@ -51,7 +51,7 @@ class Router
   
   public function addRoute($name, $path, array $defaults = array(), array $requirements = array(), array $options = array(), $host = '', $schemes = array(), $methods = array())
   {
-    $route = new Route($path,$defaults,$requirements,$options,$host,$schemes,$methods);
+    $route = new SymfonyRoute($path,$defaults,$requirements,$options,$host,$schemes,$methods);
     $this->routeCollection->add($name, $route);
   }
   
@@ -72,7 +72,7 @@ class Router
   
   /**
    * @param mixed $configuration
-   * @return IObjectFactoryService
+   * @return Router
    */
   public static function factory($configuration = null)
   {

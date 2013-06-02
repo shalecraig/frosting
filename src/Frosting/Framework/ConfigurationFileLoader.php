@@ -19,8 +19,12 @@ class ConfigurationFileLoader
   {
     $this->loadedFiles = array();
     $result = $this->loadFile($filename);
-    $this->loadedFiles = array();
     return $result;
+  }
+  
+  public function getLoadedFiles()
+  {
+    return $this->loadedFiles;
   }
   
   private function loadFile($filename)

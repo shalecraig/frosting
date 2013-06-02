@@ -2,13 +2,13 @@
 
 namespace Frosting\DependencyInjection\Tests;
 
-use Frosting\DependencyInjection\ServiceContainer;
+use Frosting\DependencyInjection\BaseServiceContainer;
 use Frosting\IService\DependencyInjection\Tests\ServiceContainerTest as BaseServiceContainerTest;
 
 class ServiceContainerTest extends BaseServiceContainerTest
 {
   protected function getServiceContainer($configuration) 
   {
-    return ServiceContainer::factory(array('services'=>$configuration));
+    return BaseServiceContainer::factory($configuration);
   }
 }

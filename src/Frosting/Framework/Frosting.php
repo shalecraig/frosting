@@ -7,6 +7,11 @@
 
 namespace Frosting\Framework;
 
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Frosting\DependencyInjection\FrostingCompilerPass;
+use Frosting\DependencyInjection\PhpDumper;
+use Symfony\Component\Config\ConfigCache;
+
 /**
  * Description of Frosting
  *
@@ -14,25 +19,11 @@ namespace Frosting\Framework;
  */
 class Frosting 
 {
-  private $configuration;
-  
   private $serviceContainer;
   
   public function __construct($configurationFile) 
   {
-    $fileLoader = new ConfigurationFileLoader();
-    $this->configuration = $fileLoader->load($configurationFile);
-
-    if(!isset($this->configuration['services']['serviceContainer'])) {
-      $this->configuration = $fileLoader->load(
-        array_merge(
-          array('imports'=>array(__DIR__ . '/../DependencyInjection/frosting.json')),
-          $this->configuration
-        )
-      );
-    }
-
-    $this->serviceContainer = $this->loadServiceContainer($this->configuration['services']);
+    $this->serviceContainer = $this->loadServiceContainer($configurationFile);
   }
   
   /**
@@ -40,10 +31,30 @@ class Frosting
    * 
    * @return \Frosting\IService\DependencyInjection\IServiceContainer
    */
-  protected function loadServiceContainer($configuration)
+  protected function loadServiceContainer($configurationFile)
   {
-    $class = $configuration['serviceContainer']['class'];
-    return new $class($configuration);
+    $escaping = md5(serialize($configurationFile));
+    $class = 'ServiceContainer' . $escaping;
+    $file = __DIR__ . '/../../../cache/' . $escaping . '/' . $class . '.php';
+    $containerConfigCache = new ConfigCache($file, true);
+    if (!class_exists($class)) {
+      if (!$containerConfigCache->isFresh()) {
+        $container = new ContainerBuilder();
+        $frostingCompilerPass = new FrostingCompilerPass($configurationFile);
+        $container->addCompilerPass($frostingCompilerPass);
+        $container->compile();
+        $dumper = new PhpDumper($container);
+        $containerConfigCache->write(
+          $dumper->dump(array('class' => $class, 'frosting' => $frostingCompilerPass->getConfiguration())),
+          $container->getResources()
+        );
+        
+      }
+      require($file);
+    }
+    $serviceContainer = new $class();
+    $serviceContainer->initialize();
+    return $serviceContainer;
   }
   
   /**

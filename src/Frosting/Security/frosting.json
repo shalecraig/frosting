@@ -15,9 +15,12 @@
                     "security": { "rule": "hasPermission", "parameter":"permission" }
                 },
                 "rules": {
-                    "security\\hasPermission": "Frosting\\Security\\CheckPermissionRule"
+                    "security\\hasPermission": "businessRuleEngine.rule.securityHasPermission"
                 }
             }
+        },
+        "businessRuleEngine.rule.securityHasPermission": {
+            "class": "Frosting\\Security\\CheckPermissionRule"
         }
     }
 }

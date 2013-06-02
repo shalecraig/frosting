@@ -1,4 +1,7 @@
-{
+{    
+    "imports": [
+        "../FileSystem/frosting.json"
+    ],
     "services": {
         "assetManager": {
             "class": "Frosting\\AssetManager\\Manager",
@@ -13,7 +16,7 @@
         "assetManagerTwigExtension": {
             "class": "Frosting\\AssetManager\\Twig\\AssetManagerExtension"
         },
-        "assetManagerFilerPersister": {
+        "assetManagerFilePersister": {
             "class": "Frosting\\AssetManager\\FilePersister"
         }
     }

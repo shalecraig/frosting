@@ -7,16 +7,16 @@
 
 namespace Frosting\DependencyInjection;
 
-use Frosting\DependencyInjection\Generator\IServiceContainerGeneratorAnnotation;
-use Frosting\DependencyInjection\Generator\ContainerGenerator;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Frosting\Annotation\ParsingNode;
 
 /**
  * @Annotation
  */
 class Tag extends \Frosting\IService\DependencyInjection\Tag implements IServiceContainerGeneratorAnnotation
 {
-  public function generateContainer(ContainerGenerator $generator, $serviceName, $methodName)
+  public function processContainerBuilder(ContainerBuilder $generator, Definition $definition, ParsingNode $parsingNode, $serviceName)
   {
-    $generator->tagService($serviceName, $this->getTagName());
+    $definition->addTag($this->getTagName());
   }
 }

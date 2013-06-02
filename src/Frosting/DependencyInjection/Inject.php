@@ -8,31 +8,17 @@
 namespace Frosting\DependencyInjection;
 
 use Frosting\IService\DependencyInjection\Inject as BaseInject;
-use Frosting\ObjectFactory\IAspectLikeAnnotation;
-use Frosting\ObjectFactory\ChildClassDefinition;
-use Mandango\Mondator\Definition\Method;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Variable;
+use Frosting\Annotation\ParsingNode;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * @Annotation
  */
-class Inject extends BaseInject implements IAspectLikeAnnotation
-{
-  /**
-   * @param \Mandango\Mondator\Definition\Method $definition
-   */
-  public function modifyCode(ChildClassDefinition $classDefinition, Method $methodDefinition = null)
-  {
-    $initializationMethod = $classDefinition->getInitililizationMethod();
-    $code = $initializationMethod->getCode();
-    
-    $parameters = $this->getParameters($classDefinition->getParentClass(),$methodDefinition->getName());
-    
-    $code .= "\n" . '$object->' . $methodDefinition->getName() . '(' . implode("\n,", $parameters) . ');';
-
-    $initializationMethod->setCode($code);
-  }
-  
-  private function getParameters($class, $method)
+class Inject extends BaseInject implements IServiceContainerGeneratorAnnotation
+{  
+  private function getParameters($class, $method, $serviceCurrentlyGenerated)
   {
     $reflectionMethod = new \ReflectionMethod($class, $method);
     
@@ -48,21 +34,28 @@ class Inject extends BaseInject implements IAspectLikeAnnotation
       
       switch(true) {
         case strpos($serviceName, '@') === 0:
-          $parameters[$parameter->getPosition()] = '$serviceContainer->getServicesByTag("' . substr($serviceName,1) . '")';
+          $parameters[$parameter->getPosition()] = new Variable('this->getServicesByTag("' . substr($serviceName,1) . '")');
           break;
         case strpos($serviceName, '$') === 0:
           if($serviceName == '$') {
-            $parameters[$parameter->getPosition()] = 'isset($contextParameters["configuration"]) ? $contextParameters["configuration"] : null';
+            $configuration = '[' . $serviceCurrentlyGenerated . ']';
           } else {
-            $parameters[$parameter->getPosition()] = '$serviceContainer->getServiceByName("configuration")->get("' . substr($serviceName,1) . '")';
+            $configuration = substr($serviceName,1);
           }
-          
+          $parameters[$parameter->getPosition()] = new Variable('this->getServiceByName("configuration")->get("' . $configuration . '")');
           break;
         default:
-          $parameters[$parameter->getPosition()] = '$serviceContainer->getServiceByName("' . $serviceName . '")';
+          $parameters[$parameter->getPosition()] = new Reference($serviceName);
           break;
       }
     }
     return $parameters;
+  }
+
+  public function processContainerBuilder(ContainerBuilder $generator, Definition $definition, ParsingNode $parsingNode, $serviceName)
+  {
+    $method = $parsingNode->getContextName();
+    $parameters = $this->getParameters($definition->getClass(), $method, $serviceName);
+    $definition->addMethodCall($method, $parameters);
   }
 }

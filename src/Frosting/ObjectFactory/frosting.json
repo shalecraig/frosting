@@ -1,7 +1,0 @@
-{
-    "services": {
-        "objectFactory": {
-            "class": "Frosting\\ObjectFactory\\ObjectFactory"
-        }
-    }
-}

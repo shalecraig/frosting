@@ -8,7 +8,6 @@
 namespace Frosting\FileSystem;
 
 use Symfony\Component\Filesystem\Filesystem;
-
 use Frosting\IService\FileSystem\IFileSystemService;
 
 /**

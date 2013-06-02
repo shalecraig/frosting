@@ -7,30 +7,21 @@
 
 namespace Frosting\Session;
 
-use Frosting\DependencyInjection\Generator\IServiceContainerGeneratorAnnotation;
-use Frosting\DependencyInjection\Generator\ContainerGenerator;
+use Frosting\DependencyInjection\IServiceContainerGeneratorAnnotation;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Frosting\Annotation\ParsingNode;
+use Frosting\DependencyInjection\Definition;
 
 /**
  * Description of BoundToSession
  *
  * @Annotation
  */
-class BoundToSession  implements IServiceContainerGeneratorAnnotation
+class BoundToSession implements IServiceContainerGeneratorAnnotation
 {
-  
-  public function __construct()
+  public function processContainerBuilder(ContainerBuilder $generator, Definition $definition, ParsingNode $parsingNode, $serviceName)
   {
-  }
-
-  /**
-   * @param mixed $object
-   * @param string $methodName
-   * @param Listen $annotation 
-   */
-  public function generateContainer(ContainerGenerator $generator, $serviceName, $attributeName)
-  {
-    $method = $generator->getServiceGetterMethod($serviceName);
-    $currentCode = $method->getCode();
+    $currentCode = $definition->getCodeInitalization();
     $serviceBinderAssignation = '
     $sessionServiceBinder = $serviceContainer->getServiceByName("sessionServiceBinder");
 ';
@@ -38,7 +29,7 @@ class BoundToSession  implements IServiceContainerGeneratorAnnotation
       $currentCode .= $serviceBinderAssignation;
     }
     $currentCode .= '
-    $sessionServiceBinder->addBindingAttribute("' . $serviceName . '","' . $attributeName . '");
+    $sessionServiceBinder->addBindingAttribute("' . $serviceName . '","' . $parsingNode->getContextName() . '");
 ';
     $restoreFromSession = '
     $sessionServiceBinder->restoreFromSession($service,"' . $serviceName . '");
@@ -46,6 +37,6 @@ class BoundToSession  implements IServiceContainerGeneratorAnnotation
     $finalCode = str_replace($restoreFromSession, "", $currentCode);
     $finalCode .= $restoreFromSession;
     
-    $method->setCode($finalCode);
+    $definition->setCodeInitialization($finalCode);
   }
 }
