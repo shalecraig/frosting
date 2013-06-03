@@ -141,8 +141,9 @@ abstract class ServiceContainerTest extends \PHPUnit_Framework_TestCase
   public function testShutdown()
   {
     $container = $this->loadServiceContainer();
+    $service = $container->getServiceByName("test");
     $container->shutdown();
-    $this->assertTrue($container->getServiceByName("test")->shutdowned);
+    $this->assertTrue($service->shutdowned);
   }
 }
 
