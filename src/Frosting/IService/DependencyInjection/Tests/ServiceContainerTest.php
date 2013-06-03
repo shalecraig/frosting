@@ -137,14 +137,23 @@ abstract class ServiceContainerTest extends \PHPUnit_Framework_TestCase
     $service = $this->loadServiceContainer()->getServiceByName("test");
     $this->assertTrue($service->started);
   }
+  
+  public function testShutdown()
+  {
+    $container = $this->loadServiceContainer();
+    $container->shutdown();
+    $this->assertTrue($container->getServiceByName("test")->shutdowned);
+  }
 }
 
 if(!class_exists('Frosting\DependencyInjection\Tests\TestService')) {
   class TestService implements ILifeCycleAware {
     public $started = false;
+    public $shutdowned = false;
+    
     public function serviceShutdown()
     {
-      
+      $this->shutdowned = true;
     }
 
     public function serviceStart()

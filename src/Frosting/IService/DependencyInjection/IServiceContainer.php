@@ -20,4 +20,10 @@ interface IServiceContainer
   public function getServiceNames();
   
   public function getServiceConfiguration($name);
+  
+  /**
+   * Will shutdown the service container and all the
+   * service that are ILifeCycleAware
+   */
+  public function shutdown();
 }

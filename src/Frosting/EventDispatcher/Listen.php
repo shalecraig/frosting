@@ -9,9 +9,7 @@ namespace Frosting\EventDispatcher;
 
 use Frosting\DependencyInjection\IServiceContainerGeneratorAnnotation;
 use Frosting\IService\EventDispatcher\IEventDispatcherService;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Frosting\Annotation\ParsingNode;
-use Frosting\DependencyInjection\Definition;
+use Frosting\DependencyInjection\GenerationContext;
 
 /**
  * Description of Inject
@@ -46,14 +44,17 @@ class Listen implements IServiceContainerGeneratorAnnotation
     return $this->priority;
   }
   
-  public function processContainerBuilder(ContainerBuilder $generator, Definition $definition, ParsingNode $parsingNode, $serviceName)
+  public function processContainerBuilder(GenerationContext $context)
   {
-    $generator->getDefinition(IEventDispatcherService::FROSTING_SERVICE_NAME)
+    $serviceName = $context->getServiceName();
+    
+    $context->getContainerBuilder()
+      ->getDefinition(IEventDispatcherService::FROSTING_SERVICE_NAME)
       ->addCodeInitialization('
   $service->addListener(
     "' . $this->getEventName() . '",
     function(\Frosting\IService\EventDispatcher\IEvent $event) use ($serviceContainer) {
-      $listener = array($serviceContainer->getServiceByName("' . $serviceName .'"),"' . $parsingNode->getContextName() . '");
+      $listener = array($serviceContainer->getServiceByName("' . $serviceName .'"),"' . $context->getParsingContextName() . '");
       $serviceContainer->getServiceByName(\Frosting\IService\Invoker\IInvokerService::FROSTING_SERVICE_NAME)
         ->invoke($listener,$event->getParameters(),array($event, $event->getSubject()));
     },

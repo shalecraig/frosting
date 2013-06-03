@@ -8,9 +8,7 @@
 namespace Frosting\Session;
 
 use Frosting\DependencyInjection\IServiceContainerGeneratorAnnotation;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Frosting\Annotation\ParsingNode;
-use Frosting\DependencyInjection\Definition;
+use Frosting\DependencyInjection\GenerationContext;
 
 /**
  * Description of BoundToSession
@@ -19,8 +17,11 @@ use Frosting\DependencyInjection\Definition;
  */
 class BoundToSession implements IServiceContainerGeneratorAnnotation
 {
-  public function processContainerBuilder(ContainerBuilder $generator, Definition $definition, ParsingNode $parsingNode, $serviceName)
+  public function processContainerBuilder(GenerationContext $context)
   {
+    $definition = $context->getServiceDefinition();
+    $serviceName = $context->getServiceName();
+    
     $currentCode = $definition->getCodeInitalization();
     $serviceBinderAssignation = '
     $sessionServiceBinder = $serviceContainer->getServiceByName("sessionServiceBinder");
@@ -29,7 +30,7 @@ class BoundToSession implements IServiceContainerGeneratorAnnotation
       $currentCode .= $serviceBinderAssignation;
     }
     $currentCode .= '
-    $sessionServiceBinder->addBindingAttribute("' . $serviceName . '","' . $parsingNode->getContextName() . '");
+    $sessionServiceBinder->addBindingAttribute("' . $serviceName . '","' . $context->getParsingContextName() . '");
 ';
     $restoreFromSession = '
     $sessionServiceBinder->restoreFromSession($service,"' . $serviceName . '");

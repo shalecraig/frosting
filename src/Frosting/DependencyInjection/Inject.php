@@ -8,9 +8,7 @@
 namespace Frosting\DependencyInjection;
 
 use Frosting\IService\DependencyInjection\Inject as BaseInject;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Variable;
-use Frosting\Annotation\ParsingNode;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
@@ -52,10 +50,19 @@ class Inject extends BaseInject implements IServiceContainerGeneratorAnnotation
     return $parameters;
   }
 
-  public function processContainerBuilder(ContainerBuilder $generator, Definition $definition, ParsingNode $parsingNode, $serviceName)
+  public function processContainerBuilder(GenerationContext $context)
   {
-    $method = $parsingNode->getContextName();
-    $parameters = $this->getParameters($definition->getClass(), $method, $serviceName);
-    $definition->addMethodCall($method, $parameters);
+    $method = $context->getParsingContextName();
+    $definition = $context->getServiceDefinition();
+    $parameters = $this->getParameters(
+      $definition->getClass(), 
+      $method, 
+      $context->getServiceName()
+    );
+    if($method == "__construct") {
+      $definition->setArguments($parameters);
+    } else {
+      $definition->addMethodCall($method, $parameters);
+    }
   }
 }

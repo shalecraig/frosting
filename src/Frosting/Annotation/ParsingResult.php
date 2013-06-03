@@ -115,18 +115,18 @@ class ParsingResult implements IParsingResult
   {
     $result = array();
     foreach($this->getClassAnnotations($filters) as $annotation) {
-      $result[] = new ParsingNode(array('context'=>'class','annotation'=>$annotation,'contextName'=>$this->className));
+      $result[] = array('context'=>'class','annotation'=>$annotation,'contextName'=>$this->className);
     }
     
     foreach($this->getAllMethodAnnotations($filters) as $methodName => $annotations) {
       foreach($annotations as $annotation) {
-        $result[] = new ParsingNode(array('context'=>'method','annotation'=>$annotation,'contextName'=>$methodName));
+        $result[] = array('context'=>'method','annotation'=>$annotation,'contextName'=>$methodName);
       }
     }
     
     foreach($this->getAllPropertyAnnotations($filters) as $propertyName => $annotations) {
       foreach($annotations as $annotation) {
-        $result[] = new ParsingNode(array('context'=>'property','annotation'=>$annotation,'contextName'=>$propertyName));
+        $result[] = array('context'=>'property','annotation'=>$annotation,'contextName'=>$propertyName);
       }
     }
     

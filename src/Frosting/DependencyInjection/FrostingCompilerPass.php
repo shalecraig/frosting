@@ -73,7 +73,8 @@ class FrostingCompilerPass implements CompilerPassInterface
 
       foreach($annotations as $parsingNode) {
         $this->addFileResource(get_class($parsingNode['annotation']));
-        $parsingNode['annotation']->processContainerBuilder($container, $definition, $parsingNode, $name);
+        $generationContext = new GenerationContext($container,$name, $definition, $parsingNode);
+        $parsingNode['annotation']->processContainerBuilder($generationContext);
       }
     }
     

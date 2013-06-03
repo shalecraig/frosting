@@ -7,15 +7,12 @@
 
 namespace Frosting\DependencyInjection;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Frosting\Annotation\ParsingNode;
-
 /**
  *
  * @author Martin
  */
 interface IServiceContainerGeneratorAnnotation 
 {
-  public function processContainerBuilder(ContainerBuilder $generator, Definition $definition, ParsingNode $parsingNode, $serviceName);
+  public function processContainerBuilder(GenerationContext $context);
 }
 
